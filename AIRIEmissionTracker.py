@@ -5,7 +5,7 @@ from tools import *
 EMISSION_PER_KWT = 511.7942
 
 
-class AIRITracker():
+class AIRITracker:
     """
     in order to right gpu power consumption calculation you'd better to create
     EmissionTracker before any gpu uses
@@ -32,12 +32,10 @@ class AIRITracker():
         if not os.path.is_file(self.save_file_name):
             with open(self.save_file_name, 'w') as file:
                 file.write("project_name,experiment_description,time,power_consumption,CO2_emissions\n")
-                file.write(
-                    f"{self.project_name},{self.experiment_description},{time},{power_consumption},{emissions}\n")
+                file.write(f"{self.project_name},{self.experiment_description},{time},{power_consumption},{emissions}")
         else:
             with open(self.save_file_name, "a") as file:
-                file.write(
-                    f"{self.project_name},{self.experiment_description},{time},{power_consumption},{emissions}\n")
+                file.write(f"{self.project_name},{self.experiment_description},{time},{power_consumption},{emissions}\n")
 
     def _none_period_start(self):
         self.start = time.time()
