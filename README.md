@@ -16,7 +16,7 @@ tracker = AIRITracker(project_name=your_project_name,
                       save_file_name="you_file_name",
                       measure_period=2,   #measurement will be done every 2 seconds
                       emission_level=your_value   #kg/MWTh
-                      base_power=your_gou_base_power   #power of not working gpu
+                      base_power=your_gpu_base_power   #power of not working gpu
                       )
 tracker.start()
 
