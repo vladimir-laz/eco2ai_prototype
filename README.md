@@ -20,3 +20,4 @@ tracker = AIRITracker(project_name=your_project_name,
 tracker.start()
 *your gpu calculations*
 tracker.stop()
+'''
