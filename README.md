@@ -10,6 +10,7 @@ Then, you can simply import these files
 ```python
 
 import AIRIEmissionTrack.AIRITracker
+
 tracker = AIRITracker(project_name=your_project_name,
                       experiment_description=your_experiment_description,
                       save_file_name="you_file_name",
@@ -18,6 +19,8 @@ tracker = AIRITracker(project_name=your_project_name,
                       base_power=your_gou_base_power   #power of not working gpu
                       )
 tracker.start()
+
 *your gpu calculations*
+
 tracker.stop()
 ```
