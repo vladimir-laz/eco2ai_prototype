@@ -7,7 +7,7 @@ Then, you can simply import these files
 
 ## Use example
 
-'''python
+```python
 
 import AIRIEmissionTrack.AIRITracker
 tracker = AIRITracker(project_name=your_project_name,
@@ -20,4 +20,4 @@ tracker = AIRITracker(project_name=your_project_name,
 tracker.start()
 *your gpu calculations*
 tracker.stop()
-'''
+```
