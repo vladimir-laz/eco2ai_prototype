@@ -4,17 +4,21 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from tools import *
 
 EMISSION_PER_KWT = 511.7942
-FROM_mWATT_TO_KWATTH = 1000*1000*3600
+FROM_mWATTS_TO_kWATTH = 1000*1000*3600
+FROM_kWATTH_TO_MWATTH = 1000
+
 
 class AIRITracker:
     """
-    in order to right gpu power consumption calculation you'd better to create
-    EmissionTracker before any gpu uses
+    In order to correct gpu power consumption calculation you should create
+    EmissionTracker before any gpu uses as tracker considers background gpu power
 
+    For every new gpu calculation it should be created new tracker
+
+    ----------------------------------------------------------------------
     Use example:
 
     import AIRIEmissionTrack.AIRITracker
-    
     tracker = AIRITracker(project_name=your_project_name,
                           experiment_description=your_experiment_description,
                           save_file_name="you_file_name",
@@ -22,13 +26,11 @@ class AIRITracker:
                           emission_level=your_value   #kg/kWTh
                           base_power=your_gou_base_power   #power of not working gpu
                           )
-    
     tracker.start()
-
     *your gpu calculations*
-
     tracker.stop()
-    
+
+    ----------------------------------------------------------------------
     """
     def __init__(self,
                  project_name,
@@ -52,27 +54,26 @@ class AIRITracker:
 
     def _write_to_csv(self):
         duration = time.time() - self.start_time
-        emissions = self._consumption * duration
+        emissions = self._consumption * duration / FROM_kWATTH_TO_MWATTH
         if not os.path.isfile(self.save_file_name):
             with open(self.save_file_name, 'w') as file:
-                file.write("project_name,experiment_description,time,power_consumption,CO2_emissions\n")
-                file.write(f"{self.project_name},{self.experiment_description},{duration},{self._consumption},{emissions}")
+                file.write("project_name,experiment_description,time(s),power_consumption(kWTh),CO2_emissions(kg)\n")
+                file.write(f"{self.project_name},{self.experiment_description},{duration},{self._consumption},{emissions}\n")
         else:
             with open(self.save_file_name, "a") as file:
                 file.write(f"{self.project_name},{self.experiment_description},{duration},{self._consumption},{emissions}\n")
 
     def _func_for_sched(self):
         current_powers = gpu_power()
-        print(self.start_time, time.time())
+        # print(self.start_time, time.time())
         duration = time.time() - self.start_time
         for base_power, current_power in zip(self.base_power_consumption, current_powers):
-            self._consumption += (current_power - base_power) / FROM_mWATT_TO_KWATTH * duration
+            self._consumption += (current_power - base_power) / FROM_mWATTS_TO_kWATTH * duration
         
-        print("self._func_for_sched's consumption = ", self._consumption)
+        # print("self._func_for_sched's consumption = ", self._consumption)
 
     def start(self):
         self.start_time = time.time()
-        self.base_power_consumption = gpu_power()
         if self.measure_period is not None:
             # print("scheduler was activated")
             self._scheduler.add_job(self._func_for_sched, "interval", seconds=self.measure_period)
