@@ -20,12 +20,12 @@ class Tracker:
 
     import SberEmissionTrack.Tracker
     tracker = Tracker(project_name=your_project_name,
-                          experiment_description=your_experiment_description,
-                          save_file_name="you_file_name",
-                          measure_period=2,   #measurement will be done every 2 seconds
-                          emission_level=your_value   #kg/MWTh
-                          base_power=your_gpu_base_power   #power of not working gpu
-                          )
+                      experiment_description=your_experiment_description,
+                      save_file_name="you_file_name",
+                      measure_period=2,   #measurement will be done every 2 seconds
+                      emission_level=your_value   #kg/MWTh
+                      base_power=your_gpu_base_power   #power of not working gpu
+                      )
     tracker.start()
     *your gpu calculations*
     tracker.stop()
@@ -40,6 +40,7 @@ class Tracker:
                  emission_level=EMISSION_PER_KWT,
                  base_power=None
                  ):
+                #  добавить проверку на наличие видимых гпу
         self.project_name = project_name
         self.experiment_description = experiment_description
         self.save_file_name = save_file_name
