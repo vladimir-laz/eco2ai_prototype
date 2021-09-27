@@ -1,7 +1,7 @@
 # AIRIEmisisonTracker
 
 ## Installation
-Download files AIRIEmissionTrack.py and tools.py right in your directory.
+Download files SberEmissionTrack.py and tools.py right in your directory.
 
 Then, simply import these files(see use example)
 
@@ -12,9 +12,9 @@ It needs to be installed pynvml and apscheduler libraries
 
 ```python
 
-import AIRIEmissionTrack.AIRITracker
+import SberEmissionTrack.Tracker
 
-tracker = AIRITracker(project_name=your_project_name,
+tracker = Tracker(project_name=your_project_name,
                       experiment_description=your_experiment_description,
                       save_file_name="you_file_name",
                       measure_period=2,   #measurement will be done every 2 seconds

@@ -8,7 +8,7 @@ FROM_mWATTS_TO_kWATTH = 1000*1000*3600
 FROM_kWATTH_TO_MWATTH = 1000
 
 
-class AIRITracker:
+class Tracker:
     """
     In order to correct gpu power consumption calculation you should create
     EmissionTracker before any gpu uses as tracker considers background gpu power
@@ -18,8 +18,8 @@ class AIRITracker:
     ----------------------------------------------------------------------
     Use example:
 
-    import AIRIEmissionTrack.AIRITracker
-    tracker = AIRITracker(project_name=your_project_name,
+    import SberEmissionTrack.Tracker
+    tracker = Tracker(project_name=your_project_name,
                           experiment_description=your_experiment_description,
                           save_file_name="you_file_name",
                           measure_period=2,   #measurement will be done every 2 seconds
