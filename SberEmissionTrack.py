@@ -11,7 +11,7 @@ FROM_kWATTH_TO_MWATTH = 1000
 class Tracker:
     """
     In order to correctly calculate gpu power consumption you should create
-    EmissionTracker before any gpu and cpu uses as tracker considers background gpu and cpu power
+    Tracker before any gpu and cpu uses as tracker considers background gpu and cpu power
 
     For every new gpu calculation it should be created new tracker
 
