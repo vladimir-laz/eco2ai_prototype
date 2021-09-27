@@ -1,9 +1,9 @@
 # AIRIEmisisonTracker
 
 ## Installation
-You should download files AIRIEmissionTrack.py and tools.py right in your directory.
+Download files AIRIEmissionTrack.py and tools.py right in your directory.
 
-Then, you can simply import these files
+Then, simply import these files(see use example)
 
 ## Requirements
 It needs to be installed pynvml and apscheduler libraries
