@@ -5,6 +5,9 @@ You should download files AIRIEmissionTrack.py and tools.py right in your direct
 
 Then, you can simply import these files
 
+## Requirements
+It needs to be installed pynvml and apscheduler libraries
+
 ## Use example
 
 ```python
