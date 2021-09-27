@@ -1,14 +1,18 @@
 # AIRIEmisisonTracker
 
+## Requirements
+It needs to be installed pynvml and apscheduler libraries.
+```bash
+pip install pynvml
+pip install apscheduler
+```
+Also it is need to have library tzlocal with version >= 2.0(it will be installed with apscheduler library)
+
 ## Installation
 Download files SberEmissionTrack.py and tools.py right in your directory.
 
 Then, simply import these files(see use example)
 
-## Requirements
-It needs to be installed pynvml and apscheduler libraries.
-
-Also it is need to have library tzlocal with version >= 2.0(it will be installed with apscheduler library)
 
 ## Use example
 
