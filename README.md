@@ -8,7 +8,7 @@ pip install apscheduler
 ```
 Also it is need to have library tzlocal with version >= 2.0(usually, it is installed with apscheduler library)
 
-## Installation
+## Utilization
 Download files SberEmissionTrack.py and tools.py right in your directory.
 
 Then, simply import these files(see use example)
@@ -33,3 +33,8 @@ tracker.start()
 
 tracker.stop()
 ```
+
+## Advices
+>In order to correctly calculate gpu power consumption you should create EmissionTracker before any gpu or cpu uses as tracker considers background gpu and cpu power
+
+>For every new gpu calculation it should be created new tracker

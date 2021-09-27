@@ -1,7 +1,7 @@
 import os
 import time
 from apscheduler.schedulers.background import BackgroundScheduler
-from tools import *
+from tools_gpu import *
 
 EMISSION_PER_KWT = 511.7942
 FROM_mWATTS_TO_kWATTH = 1000*1000*3600
@@ -10,8 +10,8 @@ FROM_kWATTH_TO_MWATTH = 1000
 
 class Tracker:
     """
-    In order to correct gpu power consumption calculation you should create
-    EmissionTracker before any gpu uses as tracker considers background gpu power
+    In order to correctly calculate gpu power consumption you should create
+    EmissionTracker before any gpu and cpu uses as tracker considers background gpu and cpu power
 
     For every new gpu calculation it should be created new tracker
 

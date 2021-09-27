@@ -9,6 +9,7 @@ def is_gpu_available():
     except pynvml.NVMLError:
         return False
 
+
 def gpu_memory():
     pynvml.nvmlInit()
     deviceCount = pynvml.nvmlDeviceGetCount()
