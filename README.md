@@ -6,7 +6,7 @@ It needs to be installed pynvml and apscheduler libraries.
 pip install pynvml
 pip install apscheduler
 ```
-Also it is need to have library tzlocal with version >= 2.0(it will be installed with apscheduler library)
+Also it is need to have library tzlocal with version >= 2.0(usually, it is installed with apscheduler library)
 
 ## Installation
 Download files SberEmissionTrack.py and tools.py right in your directory.
