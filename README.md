@@ -1,11 +1,12 @@
 # SberEmisisonTracker
 
 ##  Installation
-As this project is actively updating, in order to utilize SberEmisisonTracker correctly it is recommended to run 
+As this project is intensively updating, in order to utilize SberEmisisonTracker correctly it is recommended to run 
 ```bash
 echo y pip uninstall SberEmissionTrack
 ```
 before the instalation
+
 Then, all you need to install the package is to run one command in your terminal:
 ```bash
 pip install git+git://github.com/vladimir-laz/AIRIEmisisonTracker.git
