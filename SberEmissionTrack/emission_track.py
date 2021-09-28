@@ -39,6 +39,8 @@ class Tracker:
                  base_power=None
                  ):
                 #  добавить проверку на наличие видимых гпу
+        if not is_gpu_available():
+            raise Exception('There is no visible gpu devices')
         self.project_name = project_name
         self.experiment_description = experiment_description
         self.save_file_name = save_file_name
