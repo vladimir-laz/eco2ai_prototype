@@ -1,7 +1,7 @@
-# AIRIEmisisonTracker
+# SberEmisisonTracker
 
 ##  Installation
-As this project is actively updating in order to correct utilization it is recommended to run 
+As this project is actively updating, in order to utilize SberEmisisonTracker correctly it is recommended to run 
 ```bash
 echo y pip uninstall SberEmissionTrack
 ```
