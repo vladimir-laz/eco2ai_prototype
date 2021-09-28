@@ -1,18 +1,11 @@
 # AIRIEmisisonTracker
 
-## Requirements
-It needs to be installed pynvml and apscheduler libraries.
+##  Installation
+All you need to install the package is to run one command in your terminal
 ```bash
-pip install pynvml
-pip install apscheduler
+pip install git+git://github.com/vladimir-laz/AIRIEmisisonTracker.git
 ```
-Also it is need to have library tzlocal with version >= 2.0(usually, it is installed with apscheduler library)
-
-## Utilization
-Download files SberEmissionTrack.py and tools.py right in your directory.
-
-Then, simply import these files(see use example)
-
+In some keyses it is also may be needed to restart your kernel after installation
 
 ## Use example
 
@@ -22,7 +15,7 @@ import SberEmissionTrack.Tracker
 
 tracker = Tracker(project_name=your_project_name,
                       experiment_description=your_experiment_description,
-                      save_file_name="you_file_name",
+                      save_file_name="you_file_name.csv",
                       measure_period=2,   #measurement will be done every 2 seconds
                       )
 tracker.start()
