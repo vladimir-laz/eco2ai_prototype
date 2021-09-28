@@ -22,6 +22,7 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
     ],
+    python_requires=">=3.7",
     # url = 'https://github.com/vladimir-laz/AIRIEmisisonTracker.git',
     description = long_description,
     packages = find_packages(),
