@@ -15,7 +15,7 @@ setup(
     version = '0.1.0',
     author="Vladimir Lazarev",
     py_modules=['SberEmissionTrack'],
-    url = 'https://github.com/vladimir-laz/AIRIEmisisonTracker.git',
+    # url = 'https://github.com/vladimir-laz/AIRIEmisisonTracker.git',
     description = long_description,
     packages = find_packages(),
     install_requires=DEPENDENCIES,
