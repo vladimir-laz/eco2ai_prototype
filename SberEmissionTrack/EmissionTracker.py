@@ -8,7 +8,7 @@ FROM_mWATTS_TO_kWATTH = 1000*1000*3600
 FROM_kWATTH_TO_MWATTH = 1000
 
 
-class Tracker:
+class EmissionTracker:
     """
     In order to correctly calculate gpu power consumption you should create
     Tracker before any gpu and cpu uses as tracker considers background gpu and cpu power
