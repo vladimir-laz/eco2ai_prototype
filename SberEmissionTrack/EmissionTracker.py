@@ -3,7 +3,7 @@ import time
 from apscheduler.schedulers.background import BackgroundScheduler
 from tools_gpu import *
 
-EMISSION_PER_KWT = 511.7942
+EMISSION_PER_MWT = 511.7942
 FROM_mWATTS_TO_kWATTH = 1000*1000*3600
 FROM_kWATTH_TO_MWATTH = 1000
 
@@ -23,8 +23,6 @@ class EmissionTracker:
                       experiment_description=your_experiment_description,
                       save_file_name="you_file_name",
                       measure_period=2,   #measurement will be done every 2 seconds
-                      emission_level=your_value   #kg/MWTh
-                      base_power=your_gpu_base_power   #power of not working gpu
                       )
     tracker.start()
     *your gpu calculations*
@@ -37,7 +35,7 @@ class EmissionTracker:
                  experiment_description,
                  save_file_name="emission.csv",
                  measure_period=None,
-                 emission_level=EMISSION_PER_KWT,
+                 emission_level=EMISSION_PER_MWT,
                  base_power=None
                  ):
                 #  добавить проверку на наличие видимых гпу
