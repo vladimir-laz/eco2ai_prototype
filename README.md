@@ -33,4 +33,4 @@ tracker.stop()
 ## Advices
 In order to correctly calculate gpu power consumption you should create Tracker before any gpu or cpu uses as tracker considers background gpu and cpu power
 
-For every new gpu calculation it should be created new tracker
+For every new power calculation it should be created new tracker

@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 DEPENDENCIES = [
     "APScheduler",
-    "pynvml",
+    "pynvml=>5.6.2",
     "psutil",
     "py-cpuinfo",
 ]
