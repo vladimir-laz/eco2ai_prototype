@@ -1,12 +1,16 @@
 # AIRIEmisisonTracker
 
 ##  Installation
-All you need to install the package is to run one command in your terminal
+As this project is actively updating in order to correct utilization it is recommended to run 
+```bash
+echo y pip uninstall SberEmissionTrack
+```
+before the instalation
+Then, all you need to install the package is to run one command in your terminal:
 ```bash
 pip install git+git://github.com/vladimir-laz/AIRIEmisisonTracker.git
 ```
 In some keyses it is also may be needed to restart your kernel after installation
-
 ## Use example
 
 ```python
