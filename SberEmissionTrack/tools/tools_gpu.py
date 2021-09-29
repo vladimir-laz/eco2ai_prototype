@@ -16,7 +16,7 @@ class GPU():
         self._consumption = 0
     
     def calculate_consumption(self):
-        if not self.is_gpu_available():
+        if not self.is_gpu_available:
             return 0
         time_period = time.time() - self._start
         self._start = time.time()
@@ -27,7 +27,7 @@ class GPU():
         return consumption
     
     def gpu_memory(self):
-        if not self.is_gpu_available():
+        if not self.is_gpu_available:
             return None
         pynvml.nvmlInit()
         deviceCount = pynvml.nvmlDeviceGetCount()
@@ -40,7 +40,7 @@ class GPU():
         return gpus_memory
 
     def gpu_temperature(self):
-        if not self.is_gpu_available():
+        if not self.is_gpu_available:
             return None
         pynvml.nvmlInit()
         deviceCount = pynvml.nvmlDeviceGetCount()
@@ -53,7 +53,7 @@ class GPU():
         return gpus_temps
 
     def gpu_power(self):
-        if not self.is_gpu_available():
+        if not self.is_gpu_available:
             return None
         pynvml.nvmlInit()
         deviceCount = pynvml.nvmlDeviceGetCount()
@@ -66,7 +66,7 @@ class GPU():
         return gpus_powers
 
     def gpu_power_limit(self):
-        if not self.is_gpu_available():
+        if not self.is_gpu_available:
             return None
         pynvml.nvmlInit()
         deviceCount = pynvml.nvmlDeviceGetCount()
