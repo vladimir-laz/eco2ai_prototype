@@ -27,9 +27,10 @@ class CPU():
         self._start = time.time()
 
     def get_consumption(self):
+        self.calculate_consumption()
         return self._consumption
 
-    def get_base_consumption(self):
+    def get_base_usage(self):
         return self._base_persent_usage
 
     def _set_cpu_tdp(self):
@@ -50,7 +51,7 @@ class CPU():
     def calculate_consumption(self):
         time_period = time.time() - self._start
         self._start = time.time()
-        consumption = self.tdp * (self.get_cpu_percent - self._base_persent_usage) / 100 * (time_period + self._measure_period)
+        consumption = self.tdp * (self.get_cpu_percent() - self._base_persent_usage) / 100 * (time_period + self._measure_period)
         self.consumption += consumption
         return consumption
 
