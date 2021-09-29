@@ -27,7 +27,7 @@ class GPU():
         self._consumption += consumption
         return consumption
     
-    def get_concumption(self):
+    def get_consumption(self):
         if not self.is_gpu_available:
             return 0
         return self._consumption
