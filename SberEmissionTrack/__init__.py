@@ -7,7 +7,7 @@ from SberEmissionTrack.tools.tools_cpu import (
     all_available_cpu
 )
 
-from SberEmissionTrack.tools.tools_qpu import (
+from SberEmissionTrack.tools.tools_gpu import (
     GPU,
-    all_available_qpu
+    all_available_gpu
 )
