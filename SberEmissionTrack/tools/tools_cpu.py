@@ -8,6 +8,11 @@ import time
 
 FROM_WATTs_TO_kWATTh = 1000*3600
 
+class NoAvailableCpuDevicesError(Exception):
+    def __init__(self, message):
+        self.message = message
+
+
 class CPU():
     '''
     description will be written soon
@@ -57,9 +62,11 @@ class CPU():
         self._consumption += consumption
         return consumption
 
-def all_available_gpu():
-    cpu_dict = get_cpu_info()
-    string = f"""Seeable devices cpu devices:
-    {cpu_dict["brand_war"]}: {cpu_dict["count"]} devices"""
-    print(string)
-
+def all_available_cpu():
+    try:
+        cpu_dict = get_cpu_info()
+        string = f"""Seeable cpu devices:
+        {cpu_dict["brand_raw"]}: {cpu_dict["count"]} devices"""
+        print(string)
+    except:
+        raise NoAvailableCpuDevicesError("There is no any available cpu devices!")
