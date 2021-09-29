@@ -1,6 +1,5 @@
 import os
 import time
-s
 
 from SberEmissionTrack.tools.tools_gpu import *
 from SberEmissionTrack.tools.tools_cpu import *
