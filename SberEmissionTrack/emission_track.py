@@ -35,28 +35,36 @@ class Tracker:
                  project_name,
                  experiment_description,
                  save_file_name="emission.csv",
-                 measure_period=None,
+                 measure_period=2,
                  emission_level=EMISSION_PER_MWT,
-                 base_power=None
+                 cpu_tdp=None
                  ):
                 #  добавить проверку на наличие видимых гпу
-        if not is_gpu_available():
-            raise Exception('There is no visible gpu devices')
         self.project_name = project_name
         self.experiment_description = experiment_description
         self.save_file_name = save_file_name
-        if (type(measure_period) == int or type(measure_period) == int) and measure_period <= 0:
+        if (type(measure_period) == int or type(measure_period) == float) and measure_period <= 0:
             raise ValueError("measure_period should be positive number")
-        self.measure_period = measure_period
-        self.emission_level = emission_level
-        self.base_power_consumption = base_power if base_power else gpu_power()
-        self.start_time = None
+        self._measure_period = measure_period
+        self._emission_level = emission_level
         self._scheduler = BackgroundScheduler()
+        self._start_time = None
+        self._cpu = None
+        self._gpu = None
         self._consumption = 0
 
+    def consumption(self):
+        return self._consumption
+    
+    def emission_level(self):
+        return self._emission_level
+    
+    def measure_period(self):
+        return self._measure_period
+
     def _write_to_csv(self):
-        duration = time.time() - self.start_time
-        emissions = self._consumption * duration / FROM_kWATTH_TO_MWATTH
+        duration = time.time() - self._start_time
+        emissions = self._consumption * self._emission_level / FROM_kWATTH_TO_MWATTH
         if not os.path.isfile(self.save_file_name):
             with open(self.save_file_name, 'w') as file:
                 file.write("project_name,experiment_description,time(s),power_consumption(kWTh),CO2_emissions(kg)\n")
@@ -66,28 +74,31 @@ class Tracker:
                 file.write(f"{self.project_name},{self.experiment_description},{duration},{self._consumption},{emissions}\n")
 
     def _func_for_sched(self):
-        current_powers = gpu_power()
         # print(self.start_time, time.time())
         duration = time.time() - self.start_time
-        for base_power, current_power in zip(self.base_power_consumption, current_powers):
-            self._consumption += (current_power - base_power) / FROM_mWATTS_TO_kWATTH * duration
-        
+        cpu_consumption = self._cpu.calculate_consumption()
+        if self._gpu.is_gpu_available():
+            gpu_consumption = self._gpu.calculate_consumption()
+        else:
+            gpu_consumption = 0
+        self._consumption += cpu_consumption
+        self._consumption += gpu_consumption
         # print("self._func_for_sched's consumption = ", self._consumption)
 
     def start(self):
-        self.start_time = time.time()
-        if self.measure_period is not None:
-            # print("scheduler was activated")
-            self._scheduler.add_job(self._func_for_sched, "interval", seconds=self.measure_period)
-            self._scheduler.start()
+        # print("scheduler was activated")
+        self._cpu = CPU(cpu_tdp, self.measure_period)
+        self._gpu = GPU()
+        self._scheduler.add_job(self._func_for_sched, "interval", seconds=self._measure_period)
+        self._start_time = time.time()
+        self._scheduler.start()
 
     def stop(self, ):
-        if self.start_time is None:
-            raise Exception("Need to first start the tracker by tracker.start()")
+        if self._start_time is None:
+            raise Exception("Need to first start the tracker by running tracker.start()")
         # print("self._stop was run")
-        self._func_for_sched()
-        if self.measure_period is not None:
-            self._scheduler.shutdown()
+        self._scheduler.shutdown()
+        self._func_for_sched() 
         self._write_to_csv()
 
 def available_devices():
@@ -96,4 +107,4 @@ def available_devices():
     '''
     all_available_cpu()
     all_available_gpu()
-    pass
+    # need to add RAM
