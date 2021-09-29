@@ -25,12 +25,12 @@ class CPU():
         self.consumption = 0
         self.base_persent_usage = self._calculate_base_percent_usage()
 
-    def _get_cpu_tdp():
+    def _get_cpu_tdp(self):
         # prints to user cpu model and expect from him(her) to input cpu tdp
         tdp = input(f"Name os your cpu is: {self.name}.\nPlease, enter it's TDP: ")
         return tdp
 
-    def _calculate_base_percent_usage():
+    def _calculate_base_percent_usage(self):
         percents = []
         for _ in range(20): #calculating base percent usage for 10 sec
              percents.append(self.get_cpu_percent())
