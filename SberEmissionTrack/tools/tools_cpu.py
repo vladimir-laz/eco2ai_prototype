@@ -8,10 +8,6 @@ import time
 
 FROM_WATTs_TO_kWATTh = 1000*3600
 
-class NoAvailableCpuDevicesError(Exception):
-    def __init__(self, message):
-        self.message = message
-
 
 class CPU():
     '''
@@ -72,4 +68,4 @@ def all_available_cpu():
         {cpu_dict["brand_raw"]}: {cpu_dict["count"]} devices"""
         print(string)
     except:
-        raise NoAvailableCpuDevicesError("There is no any available cpu devices!")
+        print("There is no any available cpu devices")
