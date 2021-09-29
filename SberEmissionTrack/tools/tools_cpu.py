@@ -19,15 +19,13 @@ class CPU():
             self.tdp = self._get_cpu_tdp()
         else:
             self.tdp = tdp
-        if type(self.tdp) is not int and type(self.tdp) is not float:
-            raise Exception("tdp parameter must be int or float number")
         self.num_cpu = self._cpu_dict["count"]
         self.consumption = 0
         self.base_persent_usage = self._calculate_base_percent_usage()
 
     def _get_cpu_tdp(self):
         # prints to user cpu model and expect from him(her) to input cpu tdp
-        tdp = input(f"Name os your cpu is: {self.name}.\nPlease, enter it's TDP: ")
+        tdp = int(input(f"Name of your cpu: {self.name}.\nPlease, enter it's TDP: "))
         return tdp
 
     def _calculate_base_percent_usage(self):
