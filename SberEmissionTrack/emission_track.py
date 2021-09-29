@@ -92,8 +92,8 @@ class Tracker:
         # print(self._cpu_tdp, self._measure_period)
         self._cpu = CPU(self._cpu_tdp, self._measure_period)
         self._gpu = GPU()
-        self._scheduler.add_job(self._func_for_sched, "interval", seconds=self._measure_period)
         self._start_time = time.time()
+        self._scheduler.add_job(self._func_for_sched, "interval", seconds=self._measure_period)
         self._scheduler.start()
 
     def stop(self, ):
