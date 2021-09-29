@@ -52,7 +52,7 @@ class CPU():
         time_period = time.time() - self._start
         self._start = time.time()
         consumption = self.tdp * (self.get_cpu_percent() - self._base_persent_usage) / 100 * (time_period + self._measure_period)
-        self.consumption += consumption
+        self._consumption += consumption
         return consumption
 
 def all_available_gpu():
