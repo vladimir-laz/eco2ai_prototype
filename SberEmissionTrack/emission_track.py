@@ -79,7 +79,7 @@ class Tracker:
         # print(self.start_time, time.time())
         duration = time.time() - self._start_time
         cpu_consumption = self._cpu.calculate_consumption()
-        if self._gpu.is_gpu_available():
+        if self._gpu.is_gpu_available:
             gpu_consumption = self._gpu.calculate_consumption()
         else:
             gpu_consumption = 0
