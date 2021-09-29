@@ -8,6 +8,7 @@ import time
 # https://www.cpu-upgrade.com/CPUs/index.html
 
 FROM_WATTs_TO_kWATTh = 1000*3600
+NUM_CALCULATION = 200
 
 class CPU():
     '''
@@ -46,9 +47,9 @@ class CPU():
 
     def _calculate_base_percent_usage(self):
         percents = []
-        for _ in range(10): #calculating base percent usage for 10*measure_period sec
-             percents.append(self.get_cpu_percent())
-        return sum(percents) / 10
+        for _ in range(NUM_CALCULATION): #calculating base percent usage for 10*measure_period sec
+             percents.append(sum(psutil.cpu_percent(interval=10/NUM_CALCULATION, percpu=True)))
+        return sum(percents) / NUM_CALCULATION
 
     def get_cpu_percent(self):
         percent = sum(psutil.cpu_percent(interval=self._measure_period, percpu=True))
