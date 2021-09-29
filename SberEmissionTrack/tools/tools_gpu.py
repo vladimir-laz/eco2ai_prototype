@@ -24,6 +24,8 @@ class GPU():
         consumption = 0
         for base_power, current_power in zip(self._base_power_consumption, self.gpu_power()):
             consumption += (current_power - base_power) / FROM_mWATTS_TO_kWATTH * duration
+        if consumption < 0:
+            consumption = 0
         self._consumption += consumption
         return consumption
     
