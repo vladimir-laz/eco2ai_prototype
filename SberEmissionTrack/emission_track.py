@@ -48,7 +48,7 @@ class Tracker:
             raise ValueError("measure_period should be positive number")
         self._measure_period = measure_period
         self._emission_level = emission_level
-        self._scheduler = BackgroundScheduler()
+        self._scheduler = BackgroundScheduler(job_defaults={'max_instances': 2})
         self._start_time = None
         self._cpu_tdp = cpu_tdp
         self._cpu = None
