@@ -100,6 +100,7 @@ class Tracker:
         if self._start_time is None:
             raise Exception("Need to first start the tracker by running tracker.start()")
         # print("self._stop was run")
+        self._scheduler.remove()
         self._scheduler.shutdown()
         self._func_for_sched() 
         self._write_to_csv()
