@@ -99,9 +99,10 @@ def all_available_gpu():
             handle = pynvml.nvmlDeviceGetHandleByIndex(i)
             # print("names:", pynvml.nvmlDeviceGetName(handle))
             gpus_name.append(pynvml.nvmlDeviceGetName(handle))
-        string = f"""Seeable qpu devices:
+        string = f"""Seeable gpu devices:
         {gpus_name[0].decode("UTF-8")}: {deviceCount} devices"""
         print(string)
         pynvml.nvmlShutdown()
     except:
         print("There is no any available gpu devices")
+        print("last line")
