@@ -109,7 +109,6 @@ def available_devices():
     '''
     prints all available and seeable devices and their powers
     '''
-    print("changes added")
     all_available_cpu()
     all_available_gpu()
     # need to add RAM
