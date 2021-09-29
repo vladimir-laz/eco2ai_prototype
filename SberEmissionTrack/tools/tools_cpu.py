@@ -33,6 +33,9 @@ class CPU():
         self._base_persent_usage = self._calculate_base_percent_usage()
         self._start = time.time()
 
+    def set_consumption_zero(self):
+        self._consumption = 0
+
     def get_consumption(self):
         self.calculate_consumption()
         return self._consumption
