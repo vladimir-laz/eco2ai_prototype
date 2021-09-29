@@ -1,16 +1,18 @@
 import os
 import time
-from apscheduler.schedulers.background import BackgroundScheduler
-from SberEmissionTrack.tools.tools_gpu import *
+s
 
-EMISSION_PER_KWT = 511.7942
+from SberEmissionTrack.tools.tools_gpu import *
+from SberEmissionTrack.tools.tools_cpu import *
+
+EMISSION_PER_MWT = 511.7942
 FROM_mWATTS_TO_kWATTH = 1000*1000*3600
 FROM_kWATTH_TO_MWATTH = 1000
 
 
 class Tracker:
     """
-    In order to correctly calculate gpu power consumption you should create
+    In order to correctly calculate gpu or cpu ppower consumption you should create
     Tracker before any gpu and cpu uses as tracker considers background gpu and cpu power
 
     For every new gpu calculation it should be created new tracker
@@ -35,7 +37,7 @@ class Tracker:
                  experiment_description,
                  save_file_name="emission.csv",
                  measure_period=None,
-                 emission_level=EMISSION_PER_KWT,
+                 emission_level=EMISSION_PER_MWT,
                  base_power=None
                  ):
                 #  добавить проверку на наличие видимых гпу
@@ -89,4 +91,10 @@ class Tracker:
             self._scheduler.shutdown()
         self._write_to_csv()
 
-
+def available_devices():
+    '''
+    prints all available and seeable devices and their powers
+    '''
+    all_available_cpu()
+    all_available_gpu()
+    pass
