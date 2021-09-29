@@ -2,12 +2,12 @@ from cpuinfo import get_cpu_info
 import psutil
 import time
 
+
 # cpu benchmarks:
 # https://www.notebookcheck.net/Mobile-Processors-Benchmark-List.2436.0.html?
 # https://www.cpu-upgrade.com/CPUs/index.html
 
 FROM_WATTs_TO_kWATTh = 1000*3600
-
 
 class CPU():
     '''
