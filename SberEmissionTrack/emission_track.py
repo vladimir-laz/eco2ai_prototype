@@ -1,6 +1,6 @@
 import os
 import time
-from APScheduler import BackgroundScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from SberEmissionTrack.tools.tools_gpu import *
 from SberEmissionTrack.tools.tools_cpu import *
