@@ -8,6 +8,6 @@ from SberEmissionTrack.tools.tools_cpu import (
 )
 
 from SberEmissionTrack.tools.tools_gpu import (
-    GPU,
+    # GPU,
     all_available_gpu
 )
