@@ -1,13 +1,32 @@
 import pynvml
 
+FROM_mWATTS_TO_kWATTH = 1000*1000*3600
+FROM_kWATTH_TO_MWATTH = 1000
+
 class NoAvailableGpuDevicesError(Exception):
     def __init__(self, message):
         self.message = message
 
 
 class GPU():
-    def __init__(self):
-        self._gpu_available() = self.is_gpu_evailable()
+    def __init__(self, measure_period = 2,):
+        if is_gpu_available():
+            self._measure_period = measure_period
+            self._consumption = 0
+            self._base_power_consumption = self.gpu_power()
+            self._start = time.time()
+    
+    def set_consumption_zero(self):
+        self._consumption = 0
+    
+    def calculate_consumption(self):
+        time_period = time.time() - self._start
+        self._start = time.time()
+        consumption = 0
+        for base_power, current_power in zip(self._base_power_consumption, self.gpu_power()):
+            consumption += (current_power - base_power) / FROM_mWATTS_TO_kWATTH * duration
+        self._consumption += consumption
+        return consumption
 
     def is_gpu_available(self):
         """Returns True if the GPU details are available."""
@@ -63,7 +82,7 @@ class GPU():
 
 def all_available_gpu():
     '''
-    This function are done on the assumption that all qpus devices are the same model
+    This function is done on the assumption that all qpu devices are the same model
     '''
     try:
         pynvml.nvmlInit()
@@ -79,5 +98,3 @@ def all_available_gpu():
         pynvml.nvmlShutdown()
     except:
         raise NoAvailableGpuDevicesError("There is no any available gpu devices!")
-
-all_available_gpu()
