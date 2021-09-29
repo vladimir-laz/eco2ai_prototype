@@ -13,6 +13,7 @@ pip install git+git://github.com/vladimir-laz/AIRIEmisisonTracker.git
 ```
 In some keyses it is also may be needed to restart your kernel after installation
 ## Use example
+For more complite instructions you can explore the guide folder. There is sber_emission_tracker_guide.ipynd  - very useful jupyter notebook with code and comments. It is recommended to explore it.
 
 ```python
 
@@ -22,10 +23,11 @@ tracker = Tracker(project_name=your_project_name,
                       experiment_description=your_experiment_description,
                       save_file_name="you_file_name.csv",
                       measure_period=2,   #measurement will be done every 2 seconds
+                      cpu_tdp=<you_cpu_tdp_value> 
                       )
 tracker.start()
 
-*your gpu calculations*
+*your gpu & cpu calculations*
 
 tracker.stop()
 ```
@@ -33,4 +35,4 @@ tracker.stop()
 ## Advices
 In order to correctly calculate gpu power consumption you should create Tracker before any gpu or cpu uses as tracker considers background gpu and cpu power
 
-For every new power calculation it should be created new tracker
+For every new power calculation it should be created new tracker and taken some 20 sec break.
