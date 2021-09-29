@@ -25,7 +25,7 @@ class CPU():
 
     def _get_cpu_tdp(self):
         # prints to user cpu model and expect from him(her) to input cpu tdp
-        tdp = int(input(f"Name of your cpu: {self.name}.\nPlease, enter it's TDP: "))
+        tdp = float(input(f"Name of your cpu: {self.name}.\nPlease, enter it's TDP: "))
         return tdp
 
     def _calculate_base_percent_usage(self):
@@ -39,8 +39,8 @@ class CPU():
         percent = sum(psutil.cpu_percent(interval=0.5, percpu=True))
         return percent
 
-    def get_consumption(self):
-        consumption = self.tdp * (self.get_cpu_percent - self.base_persent_usage) / 100
+    def get_consumption(self, time_period):
+        consumption = self.tdp * (self.get_cpu_percent - self.base_persent_usage) / 100 * time_period
         self.consumption += consumption
         return consumption
 
