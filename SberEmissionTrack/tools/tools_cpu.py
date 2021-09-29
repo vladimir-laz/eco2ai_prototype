@@ -41,7 +41,7 @@ class CPU():
 
     def _set_cpu_tdp(self):
         # prints to user cpu model and expect from him(her) to input cpu tdp
-        tdp = float(input(f"Name of your cpu: {self.name}.\nPlease, enter it's TDP: "))
+        tdp = float(input(f"Name of your cpu: {self.name}.\nPlease, enter it's TDP(watt): "))
         return tdp
 
     def _calculate_base_percent_usage(self):

@@ -89,7 +89,7 @@ class Tracker:
 
     def start(self):
         # print("scheduler was activated")
-        print(self._cpu_tdp, self._measure_period)
+        # print(self._cpu_tdp, self._measure_period)
         self._cpu = CPU(self._cpu_tdp, self._measure_period)
         self._gpu = GPU()
         self._scheduler.add_job(self._func_for_sched, "interval", seconds=self._measure_period)
