@@ -1,4 +1,5 @@
 import pynvml
+import time
 
 FROM_mWATTS_TO_kWATTH = 1000*1000*3600
 FROM_kWATTH_TO_MWATTH = 1000
