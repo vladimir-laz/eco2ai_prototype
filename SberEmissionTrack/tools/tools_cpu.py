@@ -6,6 +6,8 @@ import time
 # https://www.notebookcheck.net/Mobile-Processors-Benchmark-List.2436.0.html?
 # https://www.cpu-upgrade.com/CPUs/index.html
 
+FROM_WATTs_TO_kWATTh = 1000*3600
+
 class CPU():
     '''
     description will be written soon
@@ -51,7 +53,7 @@ class CPU():
     def calculate_consumption(self):
         time_period = time.time() - self._start
         self._start = time.time()
-        consumption = self.tdp * (self.get_cpu_percent() - self._base_persent_usage) / 100 * (time_period + self._measure_period)
+        consumption = self.tdp * (self.get_cpu_percent() - self._base_persent_usage) / 100 * (time_period + self._measure_period) / FROM_WATTs_TO_kWATTh
         self._consumption += consumption
         return consumption
 
