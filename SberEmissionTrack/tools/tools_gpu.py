@@ -19,7 +19,7 @@ class GPU():
     def calculate_consumption(self):
         if not self.is_gpu_available:
             return 0
-        time_period = time.time() - self._start
+        duration = time.time() - self._start
         self._start = time.time()
         consumption = 0
         for base_power, current_power in zip(self._base_power_consumption, self.gpu_power()):
@@ -105,4 +105,3 @@ def all_available_gpu():
         pynvml.nvmlShutdown()
     except:
         print("There is no any available gpu devices")
-        print("last line")
