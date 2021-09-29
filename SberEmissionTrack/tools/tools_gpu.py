@@ -7,7 +7,7 @@ FROM_kWATTH_TO_MWATTH = 1000
 class GPU():
     def __init__(self,):
         self._consumption = 0
-        self.is_gpu_available = is_gpu_available()
+        self.is_gpu_available = is_gpu_available_f()
         if self.is_gpu_available:
             self._base_power_consumption = self.gpu_power()
             self._start = time.time()            
@@ -78,7 +78,7 @@ class GPU():
         pynvml.nvmlShutdown()
         return gpus_limits
 
-def is_gpu_available(self):
+def is_gpu_available_f(self):
         """Returns True if the GPU details are available."""
         try:
             pynvml.nvmlInit()
