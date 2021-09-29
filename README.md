@@ -3,7 +3,7 @@
 ##  Installation
 As this project is intensively updating, in order to utilize SberEmisisonTracker correctly it is recommended to run 
 ```bash
-echo y pip uninstall SberEmissionTrack
+pip uninstall SberEmissionTrack -y
 ```
 before the instalation
 
