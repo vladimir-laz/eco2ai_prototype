@@ -3,23 +3,21 @@ import pynvml
 FROM_mWATTS_TO_kWATTH = 1000*1000*3600
 FROM_kWATTH_TO_MWATTH = 1000
 
-class NoAvailableGpuDevicesError(Exception):
-    def __init__(self, message):
-        self.message = message
-
 
 class GPU():
-    def __init__(self, measure_period = 2,):
-        if is_gpu_available():
-            self._measure_period = measure_period
-            self._consumption = 0
+    def __init__(self,):
+        self._consumption = 0
+        self.is_gpu_available = is_gpu_available()
+        if self.is_gpu_available:
             self._base_power_consumption = self.gpu_power()
-            self._start = time.time()
+            self._start = time.time()            
     
     def set_consumption_zero(self):
         self._consumption = 0
     
     def calculate_consumption(self):
+        if not self.is_gpu_available():
+            return 0
         time_period = time.time() - self._start
         self._start = time.time()
         consumption = 0
@@ -27,16 +25,10 @@ class GPU():
             consumption += (current_power - base_power) / FROM_mWATTS_TO_kWATTH * duration
         self._consumption += consumption
         return consumption
-
-    def is_gpu_available(self):
-        """Returns True if the GPU details are available."""
-        try:
-            pynvml.nvmlInit()
-            return True
-        except pynvml.NVMLError:
-            return False
     
     def gpu_memory(self):
+        if not self.is_gpu_available():
+            return None
         pynvml.nvmlInit()
         deviceCount = pynvml.nvmlDeviceGetCount()
         gpus_memory = []
@@ -48,6 +40,8 @@ class GPU():
         return gpus_memory
 
     def gpu_temperature(self):
+        if not self.is_gpu_available():
+            return None
         pynvml.nvmlInit()
         deviceCount = pynvml.nvmlDeviceGetCount()
         gpus_temps = []
@@ -59,6 +53,8 @@ class GPU():
         return gpus_temps
 
     def gpu_power(self):
+        if not self.is_gpu_available():
+            return None
         pynvml.nvmlInit()
         deviceCount = pynvml.nvmlDeviceGetCount()
         gpus_powers = []
@@ -70,6 +66,8 @@ class GPU():
         return gpus_powers
 
     def gpu_power_limit(self):
+        if not self.is_gpu_available():
+            return None
         pynvml.nvmlInit()
         deviceCount = pynvml.nvmlDeviceGetCount()
         gpus_limits = []
@@ -79,6 +77,14 @@ class GPU():
             gpus_limits.append(pynvml.nvmlDeviceGetEnforcedPowerLimit(handle))
         pynvml.nvmlShutdown()
         return gpus_limits
+
+def is_gpu_available(self):
+        """Returns True if the GPU details are available."""
+        try:
+            pynvml.nvmlInit()
+            return True
+        except pynvml.NVMLError:
+            return False
 
 def all_available_gpu():
     '''
@@ -97,4 +103,4 @@ def all_available_gpu():
         print(string)
         pynvml.nvmlShutdown()
     except:
-        raise NoAvailableGpuDevicesError("There is no any available gpu devices!")
+        print("There is no any available gpu devices")
