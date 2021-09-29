@@ -4,6 +4,10 @@ from .emission_track import (
 
 from SberEmissionTrack.tools.tools_cpu import (
     CPU,
-    all_available_gpu,
     all_available_cpu
+)
+
+from SberEmissionTrack.tools.tools_qpu import (
+    GPU,
+    all_available_qpu
 )
