@@ -44,7 +44,7 @@ class CPU():
         return sum(percents) / 10
 
     def get_cpu_percent(self):
-        percent = sum(psutil.cpu_percent(interval=self.measure_period, percpu=True))
+        percent = sum(psutil.cpu_percent(interval=self._measure_period, percpu=True))
         return percent
 
     def calculate_consumption(self):
