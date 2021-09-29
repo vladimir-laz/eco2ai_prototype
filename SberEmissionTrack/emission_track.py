@@ -93,14 +93,14 @@ class Tracker:
         self._cpu = CPU(self._cpu_tdp, self._measure_period)
         self._gpu = GPU()
         self._start_time = time.time()
-        self._scheduler.add_job(self._func_for_sched, "interval", seconds=self._measure_period)
+        self._scheduler.add_job(self._func_for_sched, "interval", seconds=self._measure_period, id="job")
         self._scheduler.start()
 
     def stop(self, ):
         if self._start_time is None:
             raise Exception("Need to first start the tracker by running tracker.start()")
         # print("self._stop was run")
-        self._scheduler.remove()
+        self._scheduler.remove_job("job")
         self._scheduler.shutdown()
         self._func_for_sched() 
         self._write_to_csv()
