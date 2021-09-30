@@ -12,9 +12,13 @@ NUM_CALCULATION = 200
 
 class CPU():
     '''
-    description will be written soon
-    1) All methods are done on the assumption that all cpus are equal
-    2) it takes time to calculate base percent usage, - 10 seconds
+    This class is interface for tracking cpu consumption.
+    All methods are done here on the assumption that all cpus devices are equal.
+
+    When class object is initialized it takes about 10 seconds to measure mean power consumption.
+
+    It is recommended to wait about 20 seconds beetwen different calculations 
+    in order to current cpu power consumption dropped to base(background) consumption level
     '''
     def __init__(self, tdp=None, measure_period=0.5):
         self._cpu_dict = get_cpu_info()

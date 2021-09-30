@@ -12,24 +12,40 @@ FROM_kWATTH_TO_MWATTH = 1000
 
 class Tracker:
     """
-    In order to correctly calculate gpu or cpu ppower consumption you should create
-    Tracker before any gpu and cpu uses as tracker considers background gpu and cpu power
+    In order to correctly calculate gpu or cpu power consumption you should create
+    Tracker before any gpu and cpu uses as tracker considers background gpu and cpu power consumption
 
-    For every new gpu calculation it should be created new tracker
+    For every new gpu calculation it should be created new tracker!
 
     ----------------------------------------------------------------------
     Use example:
+    # you can initialize cpu_tdp before tracking if you know your cpu device's model:
 
     import SberEmissionTrack.Tracker
-    tracker = Tracker(project_name=your_project_name,
-                      experiment_description=your_experiment_description,
-                      save_file_name="you_file_name",
-                      measure_period=2,   #measurement will be done every 2 seconds
-                      )
+    tracker = SberEmissionTrack.Tracker(project_name="TEST",
+                                        experiment_description="testing tracker",
+                                        save_file_name="emission.csv",
+                                        measure_period=1, 
+                                        cpu_tdp=205)
     tracker.start()
     *your gpu calculations*
     tracker.stop()
 
+    # or if you don't know your cpu model, you will be shown the cpu model
+    # in order to enter it's tdp:
+
+    import SberEmissionTrack.Tracker
+    tracker = SberEmissionTrack.Tracker(project_name="TEST",
+                                        experiment_description="testing tracker",
+                                        save_file_name="emission.csv",
+                                        measure_period=1,)
+                                        
+    >>>Name of your cpu: Intel(R) Xeon(R) Platinum 8168 CPU @ 2.70GHz.
+    >>>Please, enter it's TDP(watt):
+
+    tracker.start()
+    *your gpu calculations*
+    tracker.stop()
     ----------------------------------------------------------------------
     """
     def __init__(self,

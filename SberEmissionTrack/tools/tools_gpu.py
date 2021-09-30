@@ -6,6 +6,10 @@ FROM_kWATTH_TO_MWATTH = 1000
 
 
 class GPU():
+    '''
+    This class is interface for tracking gpu consumption.
+    All methods are done here on the assumption that all gpus devices are equal.
+    '''
     def __init__(self,):
         self._consumption = 0
         self.is_gpu_available = is_gpu_available()
