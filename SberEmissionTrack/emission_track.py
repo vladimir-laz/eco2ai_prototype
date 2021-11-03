@@ -54,7 +54,6 @@ class Tracker:
                  save_file_name="emission.csv",
                  measure_period=2,
                  emission_level=EMISSION_PER_MWT,
-                 cpu_tdp=None
                  ):
                 #  добавить проверку на наличие видимых гпу
         self.project_name = project_name
@@ -66,7 +65,6 @@ class Tracker:
         self._emission_level = emission_level
         self._scheduler = BackgroundScheduler(job_defaults={'max_instances': 2})
         self._start_time = None
-        self._cpu_tdp = cpu_tdp
         self._cpu = None
         self._gpu = None
         self._consumption = 0
@@ -105,8 +103,7 @@ class Tracker:
 
     def start(self):
         # print("scheduler was activated")
-        # print(self._cpu_tdp, self._measure_period)
-        self._cpu = CPU(self._cpu_tdp, self._measure_period)
+        self._cpu = CPU()
         self._gpu = GPU()
         self._start_time = time.time()
         self._scheduler.add_job(self._func_for_sched, "interval", seconds=self._measure_period, id="job")
