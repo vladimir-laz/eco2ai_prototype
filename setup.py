@@ -20,4 +20,7 @@ setup(
     description = long_description,
     packages = find_packages(),
     install_requires=DEPENDENCIES,
+    package_data={
+        "SberEmissionTrack": [
+            "data/cpu_names.csv",
 )

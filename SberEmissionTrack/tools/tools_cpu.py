@@ -25,11 +25,13 @@ class CPU():
     It is recommended to wait about 20 seconds beetwen different calculations 
     in order to current cpu power consumption dropped to base(background) consumption level
     '''
-    def __init__(self, tdp=None, measure_period=0.5):
+    def __init__(self, measure_period=0.5):
         self._cpu_dict = get_cpu_info()
         self._measure_period = measure_period
         self._name = self._cpu_dict["brand_raw"]
-        self.tdp = find_tdp_value(self._name, "cpu_names.csv")
+        self._tdp = find_tdp_value(self._name, "cpu_names.csv")
+        print(self._name)
+        print(self._tdp)
         self._consumption = 0
         # self._base_persent_usage = self._calculate_base_percent_usage()
         self._start = time.time()
@@ -48,7 +50,7 @@ class CPU():
     def calculate_consumption(self):
         time_period = time.time() - self._start
         self._start = time.time()
-        consumption = self.tdp * (self.get_cpu_percent() - self._base_persent_usage) / 100 * (time_period + self._measure_period) / FROM_WATTs_TO_kWATTh
+        consumption = self._tdp * (self.get_cpu_percent() - self._base_persent_usage) / 100 * (time_period + self._measure_period) / FROM_WATTs_TO_kWATTh
         if consumption < 0:
             consumption = 0
         self._consumption += consumption
