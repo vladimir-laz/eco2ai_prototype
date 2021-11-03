@@ -24,4 +24,5 @@ setup(
         "SberEmissionTrack": [
             "data/cpu_names.csv"
         ]
+    }
 )
