@@ -1,0 +1,22 @@
+package:
+  name: SberEmissionTrack
+  version: 1.0.0
+
+source:
+  git_rev: 'https://github.com/vladimir-laz/AIRIEmisisonTracker.git'
+  git_url: 'https://github.com/vladimir-laz/AIRIEmisisonTracker.git'
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+
+test:
+  imports:
+    -
+
+about:
+  home:

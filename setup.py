@@ -12,7 +12,7 @@ DEPENDENCIES = [
 
 setup(
     name = 'SberEmissionTrack',
-    version = '0.2.0',
+    version = '1.0.0',
     author="Vladimir Lazarev",
     # py_modules=['SberEmissionTrack',
     #             'tools_gpu'],

@@ -13,7 +13,7 @@ pip install git+git://github.com/vladimir-laz/AIRIEmisisonTracker.git
 ```
 In some keyses it is also may be needed to restart your kernel after installation
 ## Use example
-For more complite instructions you can explore the guide folder. There is [sber_emission_tracker_guide.ipynd](https://github.com/vladimir-laz/AIRIEmisisonTracker/blob/704ff88468f6ad403d69a63738888e1a3c41f59b/guide/sber_emission_tracker_guide.ipynb)  - very useful jupyter notebook with code and russian comments. It is recommended to explore it.
+For more complite instructions you can explore the guide folder. There is [sber_emission_tracker_guide.ipynd](https://github.com/vladimir-laz/AIRIEmisisonTracker/blob/704ff88468f6ad403d69a63738888e1a3c41f59b/guide/sber_emission_tracker_guide.ipynb)  - very useful jupyter notebook with code and russian  comments. It is recommended to explore it.
 
 ```python
 
