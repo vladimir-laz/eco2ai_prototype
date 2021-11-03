@@ -2,6 +2,7 @@ from cpuinfo import get_cpu_info
 import psutil
 import time
 import re
+import pandas as pd
 import numpy as np
 
 # cpu benchmarks:
