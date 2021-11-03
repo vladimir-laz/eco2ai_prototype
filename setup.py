@@ -24,5 +24,6 @@ setup(
     #     "SberEmissionTrack": [
     #         "data/cpu_names.csv"
     #     ]
-    # }
+    # },
+    include_package_data=True
 )
