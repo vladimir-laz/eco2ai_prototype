@@ -33,10 +33,7 @@ class CPU():
         self._cpu_dict = get_cpu_info()
         self._measure_period = measure_period
         self._name = self._cpu_dict["brand_raw"]
-        print(os.getcwd())
         self._tdp = find_tdp_value(self._name, CPU_TABLE_NAME)
-        print(self._name)
-        print(self._tdp)
         self._consumption = 0
         # self._base_persent_usage = self._calculate_base_percent_usage()
         self._start = time.time()
