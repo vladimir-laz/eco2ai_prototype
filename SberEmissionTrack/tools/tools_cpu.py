@@ -32,7 +32,7 @@ class CPU():
         self._measure_period = measure_period
         self._name = self._cpu_dict["brand_raw"]
         print(os.getcwd())
-        self._tdp = find_tdp_value(self._name, "SberEmissionTrack/data/cpu_names.csv")
+        self._tdp = find_tdp_value(self._name, "cpu_names.csv")
         print(self._name)
         print(self._tdp)
         self._consumption = 0
@@ -116,7 +116,7 @@ def find_max_tdp(elements):
 
 
 # searching cpu name in cpu table
-def find_tdp_value(f_string, f_table_name="SberEmissionTrack/data/cpu_names.csv", constant_value=CONSTANT_CONSUMPTION):
+def find_tdp_value(f_string, f_table_name="cpu_names.csv", constant_value=CONSTANT_CONSUMPTION):
     # firstly, we try to find transformed cpu name in cpu table:
     f_table = pd.read_csv(f_table_name)
     f_string, patterns = transform_cpu_name(f_string)
