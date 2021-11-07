@@ -14,16 +14,16 @@ setup(
     name = 'SberEmissionTrack',
     version = '1.0.0',
     author="Vladimir Lazarev",
-    # py_modules=['SberEmissionTrack',
-    #             'tools_gpu'],
     url = 'https://github.com/vladimir-laz/AIRIEmisisonTracker.git',
     description = long_description,
-    packages = find_packages(),
+    packages = find_packages(
+        include=['SberEmissionTrack.*', 'SberEmissionTrack.data.*']
+        ),
     install_requires=DEPENDENCIES,
-    # package_data={
-    #     "SberEmissionTrack": [
-    #         "data/cpu_names.csv"
-    #     ]
-    # },
+    package_data={
+        "SberEmissionTrack": [
+            "data/cpu_names.csv"
+        ]
+    },
     include_package_data=True
 )
