@@ -5,6 +5,7 @@ import re
 import os
 import pandas as pd
 import numpy as np
+from pkg_resources import resource_stream
 
 # cpu benchmarks:
 # https://www.notebookcheck.net/Mobile-Processors-Benchmark-List.2436.0.html?
@@ -16,6 +17,7 @@ import numpy as np
 CONSTANT_CONSUMPTION = 100
 FROM_WATTs_TO_kWATTh = 1000*3600
 NUM_CALCULATION = 200
+CPU_TABLE_NAME = resource_stream('SberEmissionTrack', 'data/cpu_names.csv').name
 
 class CPU():
     '''
@@ -32,7 +34,7 @@ class CPU():
         self._measure_period = measure_period
         self._name = self._cpu_dict["brand_raw"]
         print(os.getcwd())
-        self._tdp = find_tdp_value(self._name, "cpu_names.csv")
+        self._tdp = find_tdp_value(self._name, CPU_TABLE_NAME)
         print(self._name)
         print(self._tdp)
         self._consumption = 0
@@ -116,7 +118,7 @@ def find_max_tdp(elements):
 
 
 # searching cpu name in cpu table
-def find_tdp_value(f_string, f_table_name="cpu_names.csv", constant_value=CONSTANT_CONSUMPTION):
+def find_tdp_value(f_string, f_table_name=CPU_TABLE_NAME, constant_value=CONSTANT_CONSUMPTION):
     # firstly, we try to find transformed cpu name in cpu table:
     f_table = pd.read_csv(f_table_name)
     f_string, patterns = transform_cpu_name(f_string)
