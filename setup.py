@@ -17,7 +17,7 @@ setup(
     url = 'https://github.com/vladimir-laz/AIRIEmisisonTracker.git',
     description = long_description,
     packages = find_packages(
-        include=['SberEmissionTrack.*', 'SberEmissionTrack.data.*']
+        include=['SberEmissionTrack.data.*']
         ),
     install_requires=DEPENDENCIES,
     package_data={
