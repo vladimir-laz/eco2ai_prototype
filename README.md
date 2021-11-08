@@ -13,7 +13,7 @@ pip install git+git://github.com/vladimir-laz/AIRIEmisisonTracker.git
 ```
 In order to all dependencies to be set correctly you may need to restart your kernel after package installation
 ## Use example
-SberEmiaaionTrack's interface is quite simple. Here is a the most straightforward usage example
+SberEmissionTrack's interface is quite simple. Here is a the most straightforward usage example
 ```python
 
 import SberEmissionTrack.Tracker
