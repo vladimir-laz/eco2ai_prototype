@@ -49,8 +49,8 @@ class Tracker:
     ----------------------------------------------------------------------
     """
     def __init__(self,
-                 project_name,
-                 experiment_description,
+                 project_name="Project",
+                 experiment_description="no experiment description",
                  save_file_name="emission.csv",
                  measure_period=2,
                  emission_level=EMISSION_PER_MWT,

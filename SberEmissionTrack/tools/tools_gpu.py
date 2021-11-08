@@ -14,7 +14,6 @@ class GPU():
         self._consumption = 0
         self.is_gpu_available = is_gpu_available()
         if self.is_gpu_available:
-            self._base_power_consumption = self.gpu_power()
             self._start = time.time()            
     
     def set_consumption_zero(self):
@@ -26,8 +25,8 @@ class GPU():
         duration = time.time() - self._start
         self._start = time.time()
         consumption = 0
-        for base_power, current_power in zip(self._base_power_consumption, self.gpu_power()):
-            consumption += (current_power - base_power) / FROM_mWATTS_TO_kWATTH * duration
+        for current_power in self.gpu_power():
+            consumption += current_power / FROM_mWATTS_TO_kWATTH * duration
         if consumption < 0:
             consumption = 0
         self._consumption += consumption
@@ -100,7 +99,7 @@ def is_gpu_available():
 
 def all_available_gpu():
     '''
-    This function is done on the assumption that all qpu devices are the same model
+    This function is done on the assumption that all qpu devices are of the same model
     '''
     try:
         pynvml.nvmlInit()
