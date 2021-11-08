@@ -44,12 +44,13 @@ class CPU():
     def get_cpu_percent(self):
         tmp_array = psutil.cpu_percent(interval=self._measure_period, percpu=True)
         percent = sum(tmp_array) / len(tmp_array)
+        print(percent)
         return percent
 
     def calculate_consumption(self):
         time_period = time.time() - self._start
         self._start = time.time()
-        consumption = self._tdp * self.get_cpu_percent() * self._cpu_num / 100 * (time_period + self._measure_period) / FROM_WATTs_TO_kWATTh
+        consumption = self._tdp * self.get_cpu_percent() / 100 * self._cpu_num * (time_period + self._measure_period) / FROM_WATTs_TO_kWATTh
         if consumption < 0:
             consumption = 0
         self._consumption += consumption
