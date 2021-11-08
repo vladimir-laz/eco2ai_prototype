@@ -8,6 +8,7 @@ DEPENDENCIES = [
     "pynvml>=5.6.2",
     "psutil",
     "py-cpuinfo",
+    "util-linux",
 ]
 
 setup(

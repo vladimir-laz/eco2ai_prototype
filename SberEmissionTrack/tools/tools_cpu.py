@@ -7,12 +7,6 @@ import pandas as pd
 import numpy as np
 from pkg_resources import resource_stream
 
-# cpu benchmarks:
-# https://www.notebookcheck.net/Mobile-Processors-Benchmark-List.2436.0.html?
-# https://www.cpu-upgrade.com/CPUs/index.html
-
-# parsing tables from wikipedia:
-# https://www.youtube.com/watch?v=ICXR9nDbudk&t=52s
 
 CONSTANT_CONSUMPTION = 100
 FROM_WATTs_TO_kWATTh = 1000*3600
@@ -35,6 +29,7 @@ class CPU():
         self._name = self._cpu_dict["brand_raw"]
         self._tdp = find_tdp_value(self._name, CPU_TABLE_NAME)
         self._consumption = 0
+        self._cpu_num = number_of_cpu()
         # self._base_persent_usage = self._calculate_base_percent_usage()
         self._start = time.time()
 
@@ -47,13 +42,14 @@ class CPU():
         return self._consumption
 
     def get_cpu_percent(self):
-        percent = sum(psutil.cpu_percent(interval=self._measure_period, percpu=True))
+        tmp_array = psutil.cpu_percent(interval=self._measure_period, percpu=True)
+        percent = sum(tmp_array) / len(tmp_array)
         return percent
 
     def calculate_consumption(self):
         time_period = time.time() - self._start
         self._start = time.time()
-        consumption = self._tdp * (self.get_cpu_percent()) / 100 * (time_period + self._measure_period) / FROM_WATTs_TO_kWATTh
+        consumption = self._tdp * self.get_cpu_percent() * self._cpu_num / 100 * (time_period + self._measure_period) / FROM_WATTs_TO_kWATTh
         if consumption < 0:
             consumption = 0
         self._consumption += consumption
@@ -63,11 +59,31 @@ def all_available_cpu():
     try:
         cpu_dict = get_cpu_info()
         string = f"""Seeable cpu device(s):
-        {cpu_dict["brand_raw"]}: {cpu_dict["count"]} device(s)"""
+        {cpu_dict["brand_raw"]}: {number_of_cpu()} device(s)"""
         print(string)
     except:
         print("There is no any available cpu device(s)")
 
+
+def number_of_cpu():
+    '''
+    Need to be commented
+    '''
+    try:
+        "returns cpu sockets number"
+        # running terminal command, getting output
+        string = os.popen("lscpu")
+        output = string.read()
+        output
+        # dictionary creation
+        dictionary = dict()
+        for i in output.split('\n'):
+            tmp = i.split(':')
+            if len(tmp) == 2:
+                dictionary[tmp[0]] = tmp[1]
+        return print(min(int(dictionary["Socket(s)"]), int(dictionary["NUMA node(s)"])))
+    except:
+        return 1
 
 # string = "Intel(R) Xeon(R) Platinum 8168 CPU @ 2.70GHz."
 # string = "Intel® Xeon® Platinum 8170M Processor"
