@@ -114,4 +114,4 @@ def all_available_gpu():
         print(string)
         pynvml.nvmlShutdown()
     except:
-        print("There is no any available gpu devices())")
+        print("There is no any available gpu device(s)")
