@@ -1,13 +1,13 @@
 # SberEmisisonTracker
 
 ##  Installation
-As this project is intensively updating, in order to utilize SberEmisisonTrack correctly it is recommended to run 
+As this project is still under development, in order to utilize SberEmisisonTrack correctly please run 
 ```bash
 pip uninstall SberEmissionTrack -y
 ```
 before the installation
 
-Then, all you need to install the package is to run this command in your terminal:
+Next step to install the package is to run the following command in your terminal:
 ```bash
 pip install git+git://github.com/vladimir-laz/AIRIEmisisonTracker.git
 ```
@@ -26,9 +26,8 @@ tracker.start()
 tracker.stop()
 ```
 
-You can also explore the guide folder. There is [sber_emission_tracker_guide.ipynd](https://github.com/vladimir-laz/AIRIEmisisonTracker/blob/704ff88468f6ad403d69a63738888e1a3c41f59b/guide/sber_emission_tracker_guide.ipynb)  - useful jupyter notebook with more complete examples. It is recommended to explore it before usage.
+There is [sber_emission_tracker_guide.ipynd](https://github.com/vladimir-laz/AIRIEmisisonTracker/blob/704ff88468f6ad403d69a63738888e1a3c41f59b/guide/sber_emission_tracker_guide.ipynb)  - useful jupyter notebook with more examples and notes. We highly recommend to check it out beforehand.
+## Important note
+In order to calculate gpu & cpu power consumption correctly you should create the 'Tracker' before any gpu or cpu usage
 
-## Advices
-In order to calculate gpu & cpu power consumption correctly you should create Tracker before any gpu or cpu usage
-
-For every new calculation it should be created new tracker
+For every new calculation create a new “Tracker.”
