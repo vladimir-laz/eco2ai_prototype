@@ -1,5 +1,8 @@
 # SberEmisisonTracker
 
+## Requirements
+SberEmissionTrack need to get util-linux in order to work correctly on linux. 
+
 ##  Installation
 As this project is still under development, in order to utilize SberEmisisonTrack correctly please run 
 ```bash
