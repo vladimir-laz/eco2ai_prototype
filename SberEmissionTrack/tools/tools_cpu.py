@@ -44,13 +44,11 @@ class CPU():
     def get_cpu_percent(self):
         tmp_array = psutil.cpu_percent(interval=self._measure_period, percpu=True)
         percent = sum(tmp_array) / len(tmp_array)
-        print(percent)
         return percent
 
     def calculate_consumption(self):
         time_period = time.time() - self._start
         self._start = time.time()
-        print(self._tdp, self.get_cpu_percent(), number_of_cpu(), (time_period + self._measure_period), FROM_WATTs_TO_kWATTh)
         consumption = self._tdp * self.get_cpu_percent() / 100 * self._cpu_num * (time_period + self._measure_period) / FROM_WATTs_TO_kWATTh
         if consumption < 0:
             consumption = 0
@@ -83,8 +81,7 @@ def number_of_cpu():
             tmp = i.split(':')
             if len(tmp) == 2:
                 dictionary[tmp[0]] = tmp[1]
-        print(min(int(dictionary["Socket(s)"]), int(dictionary["NUMA node(s)"])))
-        return print(min(int(dictionary["Socket(s)"]), int(dictionary["NUMA node(s)"])))
+        return min(int(dictionary["Socket(s)"]), int(dictionary["NUMA node(s)"]))
     except:
         return 1
 
