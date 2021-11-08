@@ -12,44 +12,24 @@ FROM_kWATTH_TO_MWATTH = 1000
 
 class Tracker:
     """
-    In order to correctly calculate gpu or cpu power consumption you should create
-    Tracker before any gpu and cpu uses as tracker considers background gpu and cpu power consumption
-
-    For every new gpu calculation it should be created new tracker!
+    In order to calculate gpu & cpu power consumption correctly you should create the 'Tracker' before any gpu or cpu usage
+    For every new calculation create a new “Tracker.”
 
     ----------------------------------------------------------------------
     Use example:
-    # you can initialize cpu_tdp before tracking if you know your cpu device's model:
 
     import SberEmissionTrack.Tracker
-    tracker = SberEmissionTrack.Tracker(project_name="TEST",
-                                        experiment_description="testing tracker",
-                                        save_file_name="emission.csv",
-                                        measure_period=1, 
-                                        cpu_tdp=205)
-    tracker.start()
-    *your gpu calculations*
-    tracker.stop()
-
-    # or if you don't know your cpu model, you will be shown the cpu model
-    # in order to enter it's tdp:
-
-    import SberEmissionTrack.Tracker
-    tracker = SberEmissionTrack.Tracker(project_name="TEST",
-                                        experiment_description="testing tracker",
-                                        save_file_name="emission.csv",
-                                        measure_period=1,)
-                                        
-    >>>Name of your cpu: Intel(R) Xeon(R) Platinum 8168 CPU @ 2.70GHz.
-    >>>Please, enter it's TDP(watt):
+    tracker = SberEmissionTrack.Tracker()
 
     tracker.start()
+
     *your gpu calculations*
+    
     tracker.stop()
     ----------------------------------------------------------------------
     """
     def __init__(self,
-                 project_name="Project",
+                 project_name="Deafult project name",
                  experiment_description="no experiment description",
                  save_file_name="emission.csv",
                  measure_period=2,
