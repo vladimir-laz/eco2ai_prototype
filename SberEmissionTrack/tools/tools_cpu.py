@@ -62,11 +62,11 @@ class CPU():
 def all_available_cpu():
     try:
         cpu_dict = get_cpu_info()
-        string = f"""Seeable cpu devices:
-        {cpu_dict["brand_raw"]}: {cpu_dict["count"]} devices"""
+        string = f"""Seeable cpu device(s):
+        {cpu_dict["brand_raw"]}: {cpu_dict["count"]} device(s)"""
         print(string)
     except:
-        print("There is no any available cpu devices")
+        print("There is no any available cpu device(s)")
 
 
 # string = "Intel(R) Xeon(R) Platinum 8168 CPU @ 2.70GHz."
