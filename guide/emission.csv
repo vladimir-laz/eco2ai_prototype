@@ -1,0 +1,2 @@
+project_name,experiment_description,time(s),power_consumption(kWTh),CO2_emissions(kg)
+Tracker guide,testing SberEmissionTrack,0.6073946952819824,1.0739223725265926e-06,5.496272415093494e-07
