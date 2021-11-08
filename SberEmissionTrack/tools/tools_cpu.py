@@ -83,6 +83,7 @@ def number_of_cpu():
             tmp = i.split(':')
             if len(tmp) == 2:
                 dictionary[tmp[0]] = tmp[1]
+        print(min(int(dictionary["Socket(s)"]), int(dictionary["NUMA node(s)"])))
         return print(min(int(dictionary["Socket(s)"]), int(dictionary["NUMA node(s)"])))
     except:
         return 1
