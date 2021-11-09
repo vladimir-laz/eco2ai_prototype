@@ -12,6 +12,7 @@ FROM_kWATTH_TO_MWATTH = 1000
 
 class Tracker:
     """
+    This class calculates CO2 emissions during cpu or gpu calculations 
     In order to calculate gpu & cpu power consumption correctly you should create the 'Tracker' before any gpu or cpu usage
     For every new calculation create a new “Tracker.”
 
@@ -100,7 +101,7 @@ class Tracker:
 
 def available_devices():
     '''
-    prints all available and seeable devices and their powers
+    Prints all available and seeable cpu & gpu devices and their number
     '''
     all_available_cpu()
     all_available_gpu()

@@ -8,7 +8,8 @@ FROM_kWATTH_TO_MWATTH = 1000
 class GPU():
     '''
     This class is interface for tracking gpu consumption.
-    All methods are done here on the assumption that all gpus devices are equal.
+    All methods are done here on the assumption that all gpu devices are of equal model.
+    The GPU class is not intended for separate usage
     '''
     def __init__(self,):
         self._consumption = 0
@@ -90,16 +91,19 @@ class GPU():
         return gpus_limits
 
 def is_gpu_available():
-        """Returns True if the GPU details are available."""
-        try:
-            pynvml.nvmlInit()
-            return True
-        except pynvml.NVMLError:
-            return False
+    '''
+    Returns True if the GPU details are available.
+    '''
+    try:
+        pynvml.nvmlInit()
+        return True
+    except pynvml.NVMLError:
+        return False
 
 def all_available_gpu():
     '''
-    This function is done on the assumption that all qpu devices are of the same model
+    Prints all seeable gpu devices
+    All the devices should be of the same model
     '''
     try:
         pynvml.nvmlInit()
