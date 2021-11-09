@@ -36,4 +36,4 @@ In order to calculate gpu & cpu power consumption correctly you should create th
 For every new calculation create a new “Tracker.”
 
 # Feedback
-If you had some problems when working with our tracker, please, give a feedback comments in [document](https://docs.google.com/document/d/1sPWLeqwFJ2AZ8kLSx3Smxo9-XbrVtxyDpPheSJ8RnNQ/edit?usp=sharing)
+If you had some problems while working with our tracker, please, give a feedback comments in [document](https://docs.google.com/document/d/1sPWLeqwFJ2AZ8kLSx3Smxo9-XbrVtxyDpPheSJ8RnNQ/edit?usp=sharing)
