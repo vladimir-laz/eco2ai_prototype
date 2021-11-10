@@ -48,8 +48,6 @@ class Tracker:
         self._start_time = None
         self._cpu = None
         self._gpu = None
-        print(self._cpu.name())
-        print(self._gpu.name())
         self._consumption = 0
 
     def consumption(self):
@@ -91,6 +89,8 @@ class Tracker:
         self._start_time = time.time()
         self._scheduler.add_job(self._func_for_sched, "interval", seconds=self._measure_period, id="job")
         self._scheduler.start()
+        print(self._cpu.name())
+        print(self._gpu.name())
 
     def stop(self, ):
         if self._start_time is None:
