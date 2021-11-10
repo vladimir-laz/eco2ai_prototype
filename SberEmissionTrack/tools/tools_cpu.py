@@ -50,6 +50,9 @@ class CPU():
         self._consumption += consumption
         return consumption
 
+    def name(self,):
+        return self._name
+
 def all_available_cpu():
     '''
     Prints all seeable cpu devices
