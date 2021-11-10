@@ -1,5 +1,6 @@
 import os
 import time
+import platform
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from SberEmissionTrack.tools.tools_gpu import *
@@ -49,6 +50,10 @@ class Tracker:
         self._cpu = None
         self._gpu = None
         self._consumption = 0
+        self._os = platform.system()
+        if self._os == "Darwin":
+            self._os = "MacOS"
+        
 
     def consumption(self):
         return self._consumption
@@ -64,11 +69,11 @@ class Tracker:
         emissions = self._consumption * self._emission_level / FROM_kWATTH_TO_MWATTH
         if not os.path.isfile(self.save_file_name):
             with open(self.save_file_name, 'w') as file:
-                file.write("project_name,experiment_description,time(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name\n")
-                file.write(f"{self.project_name},{self.experiment_description},{duration},{self._consumption},{emissions},{self._cpu.name()},{self._gpu.name()}\n")
+                file.write("project_name,experiment_description,time(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS\n")
+                file.write(f"{self.project_name},{self.experiment_description},{duration},{self._consumption},{emissions},{self._cpu.name()},{self._gpu.name()},{self._os}\n")
         else:
             with open(self.save_file_name, "a") as file:
-                file.write(f"{self.project_name},{self.experiment_description},{duration},{self._consumption},{emissions},{self._cpu.name()},{self._gpu.name()}\n")
+                file.write(f"{self.project_name},{self.experiment_description},{duration},{self._consumption},{emissions},{self._cpu.name()},{self._gpu.name()},{self._os}\n")
 
     def _func_for_sched(self):
         # print(self.start_time, time.time())
