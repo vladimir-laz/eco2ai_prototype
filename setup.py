@@ -22,7 +22,8 @@ setup(
     packages = find_packages(),
     install_requires=DEPENDENCIES,
     package_data={
-        "SberEmissionTrack": [
+        "/Users/Lazarev/Desktop/my_projects/AIRIEmisisonTracker/SberEmissionTrack": [
+        # "SberEmissionTrack": [
             "data/cpu_names.csv"
         ]
     },
