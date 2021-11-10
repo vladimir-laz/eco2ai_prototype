@@ -1,10 +1,7 @@
 from setuptools import setup, find_packages
 
-with open("/Users/Lazarev/Desktop/my_projects/AIRIEmisisonTracker/README.md", "r") as f:
+with open("README.md", "r") as f:
     long_description = f.read()
-
-# with open("README.md", "r") as f:
-#     long_description = f.read()
 
 DEPENDENCIES = [
     "APScheduler",
@@ -22,8 +19,7 @@ setup(
     packages = find_packages(),
     install_requires=DEPENDENCIES,
     package_data={
-        "/Users/Lazarev/Desktop/my_projects/AIRIEmisisonTracker/SberEmissionTrack": [
-        # "SberEmissionTrack": [
+        "SberEmissionTrack": [
             "data/cpu_names.csv"
         ]
     },
