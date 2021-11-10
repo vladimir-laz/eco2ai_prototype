@@ -1,7 +1,10 @@
 from setuptools import setup, find_packages
 
-with open("README.md", "r") as f:
+with open("/Users/Lazarev/Desktop/my_projects/AIRIEmisisonTracker/README.md", "r") as f:
     long_description = f.read()
+
+# with open("README.md", "r") as f:
+#     long_description = f.read()
 
 DEPENDENCIES = [
     "APScheduler",
