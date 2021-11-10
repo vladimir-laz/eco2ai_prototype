@@ -69,11 +69,11 @@ class Tracker:
         emissions = self._consumption * self._emission_level / FROM_kWATTH_TO_MWATTH
         if not os.path.isfile(self.save_file_name):
             with open(self.save_file_name, 'w') as file:
-                file.write("project_name,experiment_description,time(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS\n")
-                file.write(f"{self.project_name},{self.experiment_description},{duration},{self._consumption},{emissions},{self._cpu.name()},{self._gpu.name()},{self._os}\n")
+                file.write("project_name,experiment_description,start_time(s),duration(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS\n")
+                file.write(f"{self.project_name},{self.experiment_description},{self._start_time},{duration},{self._consumption},{emissions},{self._cpu.name()},{self._gpu.name()},{self._os}\n")
         else:
             with open(self.save_file_name, "a") as file:
-                file.write(f"{self.project_name},{self.experiment_description},{duration},{self._consumption},{emissions},{self._cpu.name()},{self._gpu.name()},{self._os}\n")
+                file.write(f"{self.project_name},{self.experiment_description},{self._start_time},{duration},{self._consumption},{emissions},{self._cpu.name()},{self._gpu.name()},{self._os}\n")
 
     def _func_for_sched(self):
         # print(self.start_time, time.time())
