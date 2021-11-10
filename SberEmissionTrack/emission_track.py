@@ -48,6 +48,8 @@ class Tracker:
         self._start_time = None
         self._cpu = None
         self._gpu = None
+        print(self._cpu.name())
+        print(self._gpu.name())
         self._consumption = 0
 
     def consumption(self):
