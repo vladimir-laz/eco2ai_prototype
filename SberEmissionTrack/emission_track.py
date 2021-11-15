@@ -36,7 +36,7 @@ class Tracker:
                  project_name="Deafult project name",
                  experiment_description="no experiment description",
                  save_file_name="emission.csv",
-                 measure_period=2,
+                 measure_period=5,
                  emission_level=EMISSION_PER_MWT,
                  ):
                 #  добавить проверку на наличие видимых гпу
