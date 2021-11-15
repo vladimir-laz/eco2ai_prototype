@@ -47,7 +47,7 @@ class Tracker:
             raise ValueError("measure_period should be positive number")
         self._measure_period = measure_period
         self._emission_level = emission_level
-        self._scheduler = BackgroundScheduler(job_defaults={'max_instances': 2})
+        self._scheduler = BackgroundScheduler(job_defaults={'max_instances': 4})
         self._start_time = None
         self._cpu = None
         self._gpu = None
@@ -126,6 +126,7 @@ class Tracker:
 
     def _func_for_sched(self):
         duration = time.time() - self._start_time
+        self._start_time = time.time()
         cpu_consumption = self._cpu.calculate_consumption()
         if self._gpu.is_gpu_available:
             gpu_consumption = self._gpu.calculate_consumption()
