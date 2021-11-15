@@ -2,6 +2,7 @@ import os
 import time
 import platform
 import pandas as pd
+import numpy as np
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from SberEmissionTrack.tools.tools_gpu import *
@@ -35,7 +36,7 @@ class Tracker:
                  project_name="Deafult project name",
                  experiment_description="no experiment description",
                  save_file_name="emission.csv",
-                 measure_period=2,
+                 measure_period=5,
                  emission_level=EMISSION_PER_MWT,
                  ):
                 #  добавить проверку на наличие видимых гпу
@@ -46,7 +47,7 @@ class Tracker:
             raise ValueError("measure_period should be positive number")
         self._measure_period = measure_period
         self._emission_level = emission_level
-        self._scheduler = BackgroundScheduler(job_defaults={'max_instances': 2})
+        self._scheduler = BackgroundScheduler(job_defaults={'max_instances': 4})
         self._start_time = None
         self._cpu = None
         self._gpu = None
@@ -55,6 +56,9 @@ class Tracker:
         if self._os == "Darwin":
             self._os = "MacOS"
         self._country = "None"
+        # self._mode == "first_time" means that CO2 emissions is written to .csv file first time
+        # self._mode == "runtime" means that CO2 emissions is written to file periodically during runtime 
+        self._mode = "first_time"
         
 
     def consumption(self):
@@ -70,7 +74,6 @@ class Tracker:
         # if user used older versions, it may be needed to upgrade his .csv file
         # but after all, such verification should be deleted
         self.check_for_older_versions()
-
         duration = time.time() - self._start_time
         emissions = self._consumption * self._emission_level / FROM_kWATTH_TO_MWATTH
         if not os.path.isfile(self.save_file_name):
@@ -80,35 +83,47 @@ class Tracker:
         else:
             with open(self.save_file_name, "a") as file:
                 file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()},{self._gpu.name()},{self._os},{self._country}\n")
+        if self._mode == "runtime":
+            self._merge_CO2_emissions()
+        self._mode = "runtime"
+
+    # merges 2 CO2 emissions calculations together
+    def _merge_CO2_emissions(self,):
+        dataframe = pd.read_csv(self.save_file_name)
+        columns, values = dataframe.columns, dataframe.values
+        row = values[-2]
+        row[3:6] += values[-1][3:6]
+        values = np.concatenate((values[:-2], row.reshape(1, -1)))
+        pd.DataFrame(values, columns=columns).to_csv(self.save_file_name, index=False)
 
 
     # but after all, such verification should be deleted
     def check_for_older_versions(self,):
         # upgrades older emission.csv file up to new one
-        dataframe = pd.read_csv(self.save_file_name)
-        columns = "project_name,experiment_description,start_time,duration(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS,country".split(',')
-        if list(dataframe.columns.values) != columns:
-            dataframe = dataframe.assign(**{"CPU_name":"no cpu name", "GPU_name": "no gpu name","OS": "no os name", "country": "no country", "start_time": "no start time"})
-            dataframe = pd.concat(
-                [
-                dataframe[["project_name", "experiment_description"]],
-                dataframe[["start_time"]],
-                dataframe[['time(s)', 
-                            'power_consumption(kWTh)', 
-                            'CO2_emissions(kg)',
-                            'CPU_name',
-                            'GPU_name',
-                            'OS',
-                            'country']],
-                ],
-                axis=1
-                )
-            dataframe.columns = columns
-            dataframe.to_csv(self.save_file_name, index=False)
+        if os.path.isfile(self.save_file_name):
+            dataframe = pd.read_csv(self.save_file_name)
+            columns = "project_name,experiment_description,start_time,duration(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS,country".split(',')
+            if list(dataframe.columns.values) != columns:
+                dataframe = dataframe.assign(**{"CPU_name":"no cpu name", "GPU_name": "no gpu name","OS": "no os name", "country": "no country", "start_time": "no start time"})
+                dataframe = pd.concat(
+                    [
+                    dataframe[["project_name", "experiment_description"]],
+                    dataframe[["start_time"]],
+                    dataframe[['time(s)', 
+                                'power_consumption(kWTh)', 
+                                'CO2_emissions(kg)',
+                                'CPU_name',
+                                'GPU_name',
+                                'OS',
+                                'country']],
+                    ],
+                    axis=1
+                    )
+                dataframe.columns = columns
+                dataframe.to_csv(self.save_file_name, index=False)
 
 
     def _func_for_sched(self):
-        duration = time.time() - self._start_time
         cpu_consumption = self._cpu.calculate_consumption()
         if self._gpu.is_gpu_available:
             gpu_consumption = self._gpu.calculate_consumption()
@@ -116,6 +131,8 @@ class Tracker:
             gpu_consumption = 0
         self._consumption += cpu_consumption
         self._consumption += gpu_consumption
+        self._write_to_csv()
+        self._start_time = time.time()
 
     def start(self):
         self._cpu = CPU()
