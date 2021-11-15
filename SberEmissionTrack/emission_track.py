@@ -1,6 +1,7 @@
 import os
 import time
 import platform
+import pandas as pd
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from SberEmissionTrack.tools.tools_gpu import *
@@ -53,6 +54,7 @@ class Tracker:
         self._os = platform.system()
         if self._os == "Darwin":
             self._os = "MacOS"
+        self._country = "None"
         
 
     def consumption(self):
@@ -65,18 +67,47 @@ class Tracker:
         return self._measure_period
 
     def _write_to_csv(self):
+        # if user used older versions, it may be needed to upgrade his .csv file
+        # but after all, such verification should be deleted
+        self.check_for_older_versions()
+
         duration = time.time() - self._start_time
         emissions = self._consumption * self._emission_level / FROM_kWATTH_TO_MWATTH
         if not os.path.isfile(self.save_file_name):
             with open(self.save_file_name, 'w') as file:
-                file.write("project_name,experiment_description,start_time,duration(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS\n")
-                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()},{self._gpu.name()},{self._os}\n")
+                file.write("project_name,experiment_description,start_time,duration(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS,country\n")
+                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()},{self._gpu.name()},{self._os},{self._country}\n")
         else:
             with open(self.save_file_name, "a") as file:
-                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()},{self._gpu.name()},{self._os}\n")
+                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()},{self._gpu.name()},{self._os},{self._country}\n")
+
+
+    # but after all, such verification should be deleted
+    def check_for_older_versions(self,):
+        # upgrades older emission.csv file up to new one
+        dataframe = pd.read_csv(self.save_file_name)
+        columns = "project_name,experiment_description,start_time,duration(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS,country".split(',')
+        if dataframe.columns != columns:
+            dataframe = dataframe.assign(**{"CPU_name":"no cpu name", "GPU_name": "no gpu name","OS": "no os name", "country": "no country", "start_time": "no start time"})
+            dataframe = pd.concat(
+                [
+                dataframe[["project_name", "experiment_description"]],
+                dataframe[["start_time"]],
+                dataframe[['time(s)', 
+                            'power_consumption(kWTh)', 
+                            'CO2_emissions(kg)',
+                            'CPU_name',
+                            'GPU_name',
+                            'OS',
+                            'country']],
+                ],
+                axis=1
+                )
+            dataframe.columns = columns
+            dataframe.to_csv(self.save_file_name)
+
 
     def _func_for_sched(self):
-        # print(self.start_time, time.time())
         duration = time.time() - self._start_time
         cpu_consumption = self._cpu.calculate_consumption()
         if self._gpu.is_gpu_available:
@@ -85,10 +116,8 @@ class Tracker:
             gpu_consumption = 0
         self._consumption += cpu_consumption
         self._consumption += gpu_consumption
-        # print("self._func_for_sched's consumption = ", self._consumption)
 
     def start(self):
-        # print("scheduler was activated")
         self._cpu = CPU()
         self._gpu = GPU()
         self._start_time = time.time()
@@ -100,7 +129,6 @@ class Tracker:
     def stop(self, ):
         if self._start_time is None:
             raise Exception("Need to first start the tracker by running tracker.start()")
-        # print("self._stop was run")
         self._scheduler.remove_job("job")
         self._scheduler.shutdown()
         self._func_for_sched() 
