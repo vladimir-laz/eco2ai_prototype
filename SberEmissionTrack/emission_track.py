@@ -125,8 +125,6 @@ class Tracker:
 
 
     def _func_for_sched(self):
-        duration = time.time() - self._start_time
-        self._start_time = time.time()
         cpu_consumption = self._cpu.calculate_consumption()
         if self._gpu.is_gpu_available:
             gpu_consumption = self._gpu.calculate_consumption()
@@ -135,6 +133,7 @@ class Tracker:
         self._consumption += cpu_consumption
         self._consumption += gpu_consumption
         self._write_to_csv()
+        self._start_time = time.time()
 
     def start(self):
         self._cpu = CPU()
