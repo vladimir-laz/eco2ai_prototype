@@ -87,7 +87,7 @@ class Tracker:
         # upgrades older emission.csv file up to new one
         dataframe = pd.read_csv(self.save_file_name)
         columns = "project_name,experiment_description,start_time,duration(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS,country".split(',')
-        if dataframe.columns != columns:
+        if list(dataframe.columns.values) != columns:
             dataframe = dataframe.assign(**{"CPU_name":"no cpu name", "GPU_name": "no gpu name","OS": "no os name", "country": "no country", "start_time": "no start time"})
             dataframe = pd.concat(
                 [
