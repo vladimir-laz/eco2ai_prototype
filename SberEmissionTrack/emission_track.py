@@ -2,6 +2,7 @@ import os
 import time
 import platform
 import pandas as pd
+import numpy as np
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from SberEmissionTrack.tools.tools_gpu import *
@@ -89,7 +90,12 @@ class Tracker:
 
     # merges 2 CO2 emissions calculations together
     def _merge_CO2_emissions(self,):
-        pass
+        dataframe = pd.read_csv(self.save_file_name)
+        columns, values = dataframe.columns, dataframe.values
+        row = values[-2]
+        row[3:6] += values[-1][3:6]
+        values = np.concatenate((values[:-2], row.reshape(1, -1)))
+        pd.DataFrame(values, columns=columns).to_csv(self.save_file_name, index=False)
 
 
     # but after all, such verification should be deleted
@@ -127,6 +133,7 @@ class Tracker:
             gpu_consumption = 0
         self._consumption += cpu_consumption
         self._consumption += gpu_consumption
+        self._write_to_csv()
 
     def start(self):
         self._cpu = CPU()
