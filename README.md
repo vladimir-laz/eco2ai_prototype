@@ -19,9 +19,10 @@ In order to all dependencies to be set correctly you may need to restart your ke
 SberEmissionTrack's interface is quite simple. Here is a the most straightforward usage example
 ```python
 
-import SberEmissionTrack.Tracker
+import SberEmissionTrack
 
-tracker = Tracker()
+tracker = SberEmissionTrack.Tracker()
+
 tracker.start()
 
 *your gpu &(or) cpu calculations*

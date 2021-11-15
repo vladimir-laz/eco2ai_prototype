@@ -89,6 +89,19 @@ class GPU():
             gpus_limits.append(pynvml.nvmlDeviceGetEnforcedPowerLimit(handle))
         pynvml.nvmlShutdown()
         return gpus_limits
+    
+    def name(self,):
+        try:
+            pynvml.nvmlInit()
+            deviceCount = pynvml.nvmlDeviceGetCount()
+            gpus_name = []
+            for i in range(deviceCount):
+                handle = pynvml.nvmlDeviceGetHandleByIndex(i)
+                gpus_name.append(pynvml.nvmlDeviceGetName(handle))
+            pynvml.nvmlShutdown()
+            return gpus_name[0].decode("UTF-8")
+        except:
+            return "no available GPU device"
 
 def is_gpu_available():
     '''
