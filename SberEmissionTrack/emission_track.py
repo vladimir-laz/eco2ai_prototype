@@ -14,7 +14,7 @@ FROM_mWATTS_TO_kWATTH = 1000*1000*3600
 FROM_kWATTH_TO_MWATTH = 1000
 PROJECT_NAME = "Deafult project name"
 EXPERIMENT_DESCRIPTION = "no experiment description"
-FILE_NAME = "emission.csv"
+FILE_NAME = "emissiowfffwn.csv"
 
 class Tracker:
     """
