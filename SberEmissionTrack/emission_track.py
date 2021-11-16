@@ -2,6 +2,7 @@ import os
 import time
 import platform
 import pandas as pd
+import requests
 import numpy as np
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -55,7 +56,7 @@ class Tracker:
         self._os = platform.system()
         if self._os == "Darwin":
             self._os = "MacOS"
-        self._country = "None"
+        self._country = self.define_country()
         # self._mode == "first_time" means that CO2 emissions is written to .csv file first time
         # self._mode == "runtime" means that CO2 emissions is written to file periodically during runtime 
         self._mode = "first_time"
@@ -150,6 +151,11 @@ class Tracker:
         self._scheduler.shutdown()
         self._func_for_sched() 
         self._write_to_csv()
+
+    def define_country(self,):
+        region = eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['region']
+        country = eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['country']
+        return f"{region}/{country}"
 
 def available_devices():
     '''
