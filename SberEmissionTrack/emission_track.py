@@ -42,7 +42,7 @@ class Tracker:
                  measure_period=5,
                  emission_level=EMISSION_PER_MWT,
                  ):
-                #  добавить проверку на наличие видимых гпу
+        print(PROJECT_NAME, EXPERIMENT_DESCRIPTION, FILE_NAME)
         self.project_name = project_name
         self.experiment_description = experiment_description
         self.save_file_name = save_file_name
