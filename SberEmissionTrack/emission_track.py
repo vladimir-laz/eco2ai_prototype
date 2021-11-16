@@ -12,7 +12,9 @@ from SberEmissionTrack.tools.tools_cpu import *
 EMISSION_PER_MWT = 511.7942
 FROM_mWATTS_TO_kWATTH = 1000*1000*3600
 FROM_kWATTH_TO_MWATTH = 1000
-
+PROJECT_NAME = "Deafult project name"
+EXPERIMENT_DESCRIPTION = "no experiment description"
+FILE_NAME = "emission.csv"
 
 class Tracker:
     """
@@ -34,9 +36,9 @@ class Tracker:
     ----------------------------------------------------------------------
     """
     def __init__(self,
-                 project_name="Deafult project name",
-                 experiment_description="no experiment description",
-                 save_file_name="emission.csv",
+                 project_name=PROJECT_NAME,
+                 experiment_description=EXPERIMENT_DESCRIPTION,
+                 save_file_name=FILE_NAME,
                  measure_period=5,
                  emission_level=EMISSION_PER_MWT,
                  ):
