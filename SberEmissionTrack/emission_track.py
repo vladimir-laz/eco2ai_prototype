@@ -19,7 +19,7 @@ FILE_NAME = "emission.csv"
 def set_params(**params):
   # print(params)
   for i in params:
-     exec('i = params[i]')
+     exec('global i = params[i]')
     # print(f'{i} = {params[i]}')
 
 class Tracker:
