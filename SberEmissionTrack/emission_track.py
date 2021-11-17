@@ -48,7 +48,7 @@ class Tracker:
                  measure_period=10,
                  emission_level=EMISSION_PER_MWT,
                  ):
-        print(PROJECT_NAME, EXPERIMENT_DESCRIPTION, FILE_NAME)
+        # print(PROJECT_NAME, EXPERIMENT_DESCRIPTION, FILE_NAME)
         self.project_name = project_name
         self.experiment_description = experiment_description
         self.save_file_name = save_file_name
