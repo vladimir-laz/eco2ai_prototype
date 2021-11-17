@@ -4,6 +4,7 @@ import platform
 import pandas as pd
 import requests
 import numpy as np
+import re
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from SberEmissionTrack.tools.tools_gpu import *
@@ -162,8 +163,8 @@ class Tracker:
         self._write_to_csv()
 
     def define_country(self,):
-        region = eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['region']
-        country = eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['country']
+        region = re.sub(",", '',eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['region'])
+        country = re.sub(",", '',eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['country'])
         return f"{region}/{country}"
 
 def available_devices():
