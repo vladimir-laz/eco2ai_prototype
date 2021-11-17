@@ -165,6 +165,7 @@ class Tracker:
     def define_country(self,):
         region = re.sub(",", '',eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['region'])
         country = re.sub(",", '',eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['country'])
+        print(region, country)
         return f"{region}/{country}"
 
 def available_devices():
