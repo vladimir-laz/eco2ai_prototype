@@ -16,12 +16,12 @@ PROJECT_NAME = "Deafult project name"
 EXPERIMENT_DESCRIPTION = "no experiment description"
 FILE_NAME = "emission.csv"
 
-def set_params(**params):
-  # print(params)
-  for i in params:
-     exec(f'global {i}\n{i} = params[i]')
-    # print(f'{i} = {params[i]}')
-  print(PROJECT_NAME, EXPERIMENT_DESCRIPTION, FILE_NAME)
+# def set_params(**params):
+#   # print(params)
+#   for i in params:
+#      exec(f'global {i}\n{i} = params[i]')
+#     # print(f'{i} = {params[i]}')
+#   print(PROJECT_NAME, EXPERIMENT_DESCRIPTION, FILE_NAME)
 
 class Tracker:
     """
