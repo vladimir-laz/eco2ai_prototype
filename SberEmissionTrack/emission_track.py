@@ -4,7 +4,8 @@ import platform
 import pandas as pd
 import requests
 import numpy as np
-import re
+from re import sub
+from pkg_resources import resource_stream
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from SberEmissionTrack.tools.tools_gpu import *
@@ -13,16 +14,13 @@ from SberEmissionTrack.tools.tools_cpu import *
 EMISSION_PER_MWT = 511.7942
 FROM_mWATTS_TO_kWATTH = 1000*1000*3600
 FROM_kWATTH_TO_MWATTH = 1000
-PROJECT_NAME = "Deafult project name"
-EXPERIMENT_DESCRIPTION = "no experiment description"
-FILE_NAME = "emission.csv"
+# JSON_FILE_NAME = resource_stream('SberEmissionTrack', 'config.json').name
+# with open(JSON_FILE_NAME, 'w') as file:
+#     pass
 
-# def set_params(**params):
-#   # print(params)
-#   for i in params:
-#      exec(f'global {i}\n{i} = params[i]')
-#     # print(f'{i} = {params[i]}')
-#   print(PROJECT_NAME, EXPERIMENT_DESCRIPTION, FILE_NAME)
+# PROJECT_NAME = "Deafult project name"
+# EXPERIMENT_DESCRIPTION = "no experiment description"
+# FILE_NAME = "emission.csv"
 
 class Tracker:
     """
@@ -47,7 +45,7 @@ class Tracker:
                  project_name=PROJECT_NAME,
                  experiment_description=EXPERIMENT_DESCRIPTION,
                  save_file_name=FILE_NAME,
-                 measure_period=5,
+                 measure_period=10,
                  emission_level=EMISSION_PER_MWT,
                  ):
         print(PROJECT_NAME, EXPERIMENT_DESCRIPTION, FILE_NAME)
@@ -58,7 +56,7 @@ class Tracker:
             raise ValueError("measure_period should be positive number")
         self._measure_period = measure_period
         self._emission_level = emission_level
-        self._scheduler = BackgroundScheduler(job_defaults={'max_instances': 4})
+        self._scheduler = BackgroundScheduler(job_defaults={'max_instances': 4}, misfire_grace_time=None)
         self._start_time = None
         self._cpu = None
         self._gpu = None
@@ -163,10 +161,14 @@ class Tracker:
         self._write_to_csv()
 
     def define_country(self,):
-        region = re.sub(",", '',eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['region'])
-        country = re.sub(",", '',eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['country'])
-        print(region, country)
+        region = sub(",", '',eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['region'])
+        country = sub(",", '',eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['country'])
         return f"{region}/{country}"
+
+# def from_json(json_file=JSON_FILE_NAME):
+#     with open(JSON_FILE_NAME, 'r') as json_file:
+#         pass
+#     pass
 
 def available_devices():
     '''

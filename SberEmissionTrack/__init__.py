@@ -4,7 +4,6 @@ from .emission_track import (
     FILE_NAME,
     EXPERIMENT_DESCRIPTION,
     PROJECT_NAME,
-    # set_params  
 )
 
 from SberEmissionTrack.tools.tools_cpu import (
