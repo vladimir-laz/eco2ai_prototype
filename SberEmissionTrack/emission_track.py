@@ -82,7 +82,7 @@ class Tracker:
     def _write_to_csv(self):
         # if user used older versions, it may be needed to upgrade his .csv file
         # but after all, such verification should be deleted
-        self.check_for_older_versions()
+        # self.check_for_older_versions()
         duration = time.time() - self._start_time
         emissions = self._consumption * self._emission_level / FROM_kWATTH_TO_MWATTH
         if not os.path.isfile(self.save_file_name):
