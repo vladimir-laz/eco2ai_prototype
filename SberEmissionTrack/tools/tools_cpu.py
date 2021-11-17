@@ -13,6 +13,7 @@ FROM_WATTs_TO_kWATTh = 1000*3600
 NUM_CALCULATION = 200
 CPU_TABLE_NAME = resource_stream('SberEmissionTrack', 'data/cpu_names.csv').name
 
+
 class CPU():
     '''
     This class is interface for tracking cpu consumption.
@@ -28,7 +29,9 @@ class CPU():
         self._cpu_num = number_of_cpu()
         self._start = time.time()
 
-
+    def tdp(self):
+        return self._tdp
+        
     def set_consumption_zero(self):
         self._consumption = 0
 
