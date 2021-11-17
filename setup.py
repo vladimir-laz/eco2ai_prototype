@@ -20,7 +20,8 @@ setup(
     install_requires=DEPENDENCIES,
     package_data={
         "SberEmissionTrack": [
-            "data/cpu_names.csv"
+            "data/cpu_names.csv",
+            # "config.json"
         ]
     },
     include_package_data=True

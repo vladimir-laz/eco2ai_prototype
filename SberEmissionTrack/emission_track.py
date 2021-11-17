@@ -4,6 +4,8 @@ import platform
 import pandas as pd
 import requests
 import numpy as np
+from re import sub
+from pkg_resources import resource_stream
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from SberEmissionTrack.tools.tools_gpu import *
@@ -12,7 +14,13 @@ from SberEmissionTrack.tools.tools_cpu import *
 EMISSION_PER_MWT = 511.7942
 FROM_mWATTS_TO_kWATTH = 1000*1000*3600
 FROM_kWATTH_TO_MWATTH = 1000
+# JSON_FILE_NAME = resource_stream('SberEmissionTrack', 'config.json').name
+# with open(JSON_FILE_NAME, 'w') as file:
+#     pass
 
+PROJECT_NAME = "Deafult project name"
+EXPERIMENT_DESCRIPTION = "no experiment description"
+FILE_NAME = "emission.csv"
 
 class Tracker:
     """
@@ -34,13 +42,13 @@ class Tracker:
     ----------------------------------------------------------------------
     """
     def __init__(self,
-                 project_name="Deafult project name",
-                 experiment_description="no experiment description",
-                 save_file_name="emission.csv",
-                 measure_period=5,
+                 project_name=PROJECT_NAME,
+                 experiment_description=EXPERIMENT_DESCRIPTION,
+                 save_file_name=FILE_NAME,
+                 measure_period=10,
                  emission_level=EMISSION_PER_MWT,
                  ):
-                #  добавить проверку на наличие видимых гпу
+        # print(PROJECT_NAME, EXPERIMENT_DESCRIPTION, FILE_NAME)
         self.project_name = project_name
         self.experiment_description = experiment_description
         self.save_file_name = save_file_name
@@ -48,7 +56,7 @@ class Tracker:
             raise ValueError("measure_period should be positive number")
         self._measure_period = measure_period
         self._emission_level = emission_level
-        self._scheduler = BackgroundScheduler(job_defaults={'max_instances': 4})
+        self._scheduler = BackgroundScheduler(job_defaults={'max_instances': 4}, misfire_grace_time=None)
         self._start_time = None
         self._cpu = None
         self._gpu = None
@@ -74,16 +82,16 @@ class Tracker:
     def _write_to_csv(self):
         # if user used older versions, it may be needed to upgrade his .csv file
         # but after all, such verification should be deleted
-        self.check_for_older_versions()
+        # self.check_for_older_versions()
         duration = time.time() - self._start_time
         emissions = self._consumption * self._emission_level / FROM_kWATTH_TO_MWATTH
         if not os.path.isfile(self.save_file_name):
             with open(self.save_file_name, 'w') as file:
-                file.write("project_name,experiment_description,start_time,duration(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS,country\n")
-                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()},{self._gpu.name()},{self._os},{self._country}\n")
+                file.write("project_name,experiment_description(model type etc.),start_time,duration(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS,country\n")
+                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()}/{self._cpu.tdp()}TDP,{self._gpu.name()},{self._os},{self._country}\n")
         else:
             with open(self.save_file_name, "a") as file:
-                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()},{self._gpu.name()},{self._os},{self._country}\n")
+                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()}/{self._cpu.tdp()}TDP,{self._gpu.name()},{self._os},{self._country}\n")
         if self._mode == "runtime":
             self._merge_CO2_emissions()
         self._mode = "runtime"
@@ -141,8 +149,8 @@ class Tracker:
         self._start_time = time.time()
         self._scheduler.add_job(self._func_for_sched, "interval", seconds=self._measure_period, id="job")
         self._scheduler.start()
-        print(self._cpu.name())
-        print(self._gpu.name())
+        # print(self._cpu.name())
+        # print(self._gpu.name())
 
     def stop(self, ):
         if self._start_time is None:
@@ -153,9 +161,14 @@ class Tracker:
         self._write_to_csv()
 
     def define_country(self,):
-        region = eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['region']
-        country = eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['country']
+        region = sub(",", '',eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['region'])
+        country = sub(",", '',eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['country'])
         return f"{region}/{country}"
+
+# def from_json(json_file=JSON_FILE_NAME):
+#     with open(JSON_FILE_NAME, 'r') as json_file:
+#         pass
+#     pass
 
 def available_devices():
     '''
@@ -164,3 +177,5 @@ def available_devices():
     all_available_cpu()
     all_available_gpu()
     # need to add RAM
+
+
