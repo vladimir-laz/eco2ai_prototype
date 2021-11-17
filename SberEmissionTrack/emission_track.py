@@ -16,6 +16,11 @@ PROJECT_NAME = "Deafult project name"
 EXPERIMENT_DESCRIPTION = "no experiment description"
 FILE_NAME = "emission.csv"
 
+def set_params(**params):
+  for i in params:
+    i = params[i]
+    print(f'{i} = {params[i]}')
+
 class Tracker:
     """
     This class calculates CO2 emissions during cpu or gpu calculations 
@@ -166,3 +171,5 @@ def available_devices():
     all_available_cpu()
     all_available_gpu()
     # need to add RAM
+
+
