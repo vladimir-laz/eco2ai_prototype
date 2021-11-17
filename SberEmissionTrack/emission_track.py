@@ -17,9 +17,10 @@ EXPERIMENT_DESCRIPTION = "no experiment description"
 FILE_NAME = "emission.csv"
 
 def set_params(**params):
+  # print(params)
   for i in params:
-    i = params[i]
-    print(f'{i} = {params[i]}')
+     exec('i = params[i]')
+    # print(f'{i} = {params[i]}')
 
 class Tracker:
     """
