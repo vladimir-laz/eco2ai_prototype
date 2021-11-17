@@ -18,9 +18,9 @@ FROM_kWATTH_TO_MWATTH = 1000
 # with open(JSON_FILE_NAME, 'w') as file:
 #     pass
 
-# PROJECT_NAME = "Deafult project name"
-# EXPERIMENT_DESCRIPTION = "no experiment description"
-# FILE_NAME = "emission.csv"
+PROJECT_NAME = "Deafult project name"
+EXPERIMENT_DESCRIPTION = "no experiment description"
+FILE_NAME = "emission.csv"
 
 class Tracker:
     """
