@@ -5,14 +5,17 @@ import re
 import os
 import pandas as pd
 import numpy as np
+import warnings
 from pkg_resources import resource_stream
 
 
-CONSTANT_CONSUMPTION = 100
+CONSTANT_CONSUMPTION = 100.1
 FROM_WATTs_TO_kWATTh = 1000*3600
 NUM_CALCULATION = 200
 CPU_TABLE_NAME = resource_stream('SberEmissionTrack', 'data/cpu_names.csv').name
 
+class NoCPUinTableWarning(Warning):
+    pass
 
 class CPU():
     '''
@@ -31,7 +34,7 @@ class CPU():
 
     def tdp(self):
         return self._tdp
-        
+
     def set_consumption_zero(self):
         self._consumption = 0
 
@@ -144,6 +147,8 @@ def find_tdp_value(f_string, f_table_name=CPU_TABLE_NAME, constant_value=CONSTAN
     # then we try to find main patterns(i5-10400f, for instanse) in cpu names and take suitable values:
     # if there is no any patterns found in cpu name, we simply return constant TDP value
     if len(patterns) == 0:
+        warnings.warn(message="\n\nYour CPU device is not found in our database\nCPU TDP is set to constant value 100\n", 
+                      category=NoCPUinTableWarning)
         return constant_value
     
     # appending all the suitable elements to an array
@@ -162,7 +167,9 @@ def find_tdp_value(f_string, f_table_name=CPU_TABLE_NAME, constant_value=CONSTAN
     # If there are such elements(one or more), we return the value with maximum TDP among them.
     # If there is no, we return the value with maximum TDP among all the suitable elements
     if len(suitable_elements) == 0:
-        return CONSTANT_CONSUMPTION
+        warnings.warn(message="\n\nYour CPU device is not found in our database\nCPU TDP is set to constant value 100\n", 
+                      category=NoCPUinTableWarning)
+        return constant_value
     elif len(suitable_elements) == 1:
         return suitable_elements[0][1]
     else:
