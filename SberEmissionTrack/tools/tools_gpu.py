@@ -106,7 +106,7 @@ class GPU():
             pynvml.nvmlShutdown()
             return gpus_name[0].decode("UTF-8")
         except:
-            return "no available GPU device"
+            return ""
     
     def gpu_num(self):
         try:
@@ -115,7 +115,7 @@ class GPU():
             pynvml.nvmlShutdown()
             return deviceCount
         except: 
-            return ""
+            return 0
 
 def is_gpu_available():
     '''
