@@ -3,7 +3,6 @@ import time
 import warnings
 
 FROM_mWATTS_TO_kWATTH = 1000*1000*3600
-FROM_kWATTH_TO_MWATTH = 1000
 
 class NoGPUWarning(Warning):
     pass
@@ -21,7 +20,7 @@ class GPU():
             warnings.warn(message="\n\nThere is no any available GPU device!\nThe thacker will consider CPU usage only\n",
                           category=NoGPUWarning)
         if self.is_gpu_available:
-            self._start = time.time()            
+            self._start = time.time()
     
     def set_consumption_zero(self):
         self._consumption = 0
@@ -107,7 +106,16 @@ class GPU():
             pynvml.nvmlShutdown()
             return gpus_name[0].decode("UTF-8")
         except:
-            return "no available GPU device"
+            return ""
+    
+    def gpu_num(self):
+        try:
+            pynvml.nvmlInit()
+            deviceCount = pynvml.nvmlDeviceGetCount()
+            pynvml.nvmlShutdown()
+            return deviceCount
+        except: 
+            return 0
 
 def is_gpu_available():
     '''

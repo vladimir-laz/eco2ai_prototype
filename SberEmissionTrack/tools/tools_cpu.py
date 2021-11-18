@@ -50,7 +50,7 @@ class CPU():
     def calculate_consumption(self):
         time_period = time.time() - self._start
         self._start = time.time()
-        consumption = self._tdp * self.get_cpu_percent() / 100 * self._cpu_num * (time_period + self._measure_period) / FROM_WATTs_TO_kWATTh
+        consumption = self._tdp * self.get_cpu_percent() / 100 * self._cpu_num * time_period / FROM_WATTs_TO_kWATTh
         if consumption < 0:
             consumption = 0
         self._consumption += consumption
@@ -58,6 +58,9 @@ class CPU():
 
     def name(self,):
         return self._name
+
+    def cpu_num(self,):
+        return self._cpu_num
 
 def all_available_cpu():
     '''
