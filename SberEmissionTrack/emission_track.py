@@ -141,6 +141,7 @@ class Tracker:
         self._consumption += cpu_consumption
         self._consumption += gpu_consumption
         self._write_to_csv()
+        self._consumption = 0
         self._start_time = time.time()
 
     def start(self):
