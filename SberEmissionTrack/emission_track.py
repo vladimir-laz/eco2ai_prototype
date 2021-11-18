@@ -88,10 +88,10 @@ class Tracker:
         if not os.path.isfile(self.save_file_name):
             with open(self.save_file_name, 'w') as file:
                 file.write("project_name,experiment_description(model type etc.),start_time,duration(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS,country\n")
-                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()}/{self._cpu.tdp()}TDP,{self._gpu.name()},{self._os},{self._country}\n")
+                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()}/{self._cpu.tdp()}TDP: {self._cpu.cpu_num()} device(s),{self._gpu.name()}: {self._gpu.gpu_num()} device(s),{self._os},{self._country}\n")
         else:
             with open(self.save_file_name, "a") as file:
-                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()}/{self._cpu.tdp()}TDP,{self._gpu.name()},{self._os},{self._country}\n")
+                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()}/{self._cpu.tdp()}TDP: {self._cpu.cpu_num()} device(s),{self._gpu.name()}: {self._gpu.gpu_num()} device(s),{self._os},{self._country}\n")
         if self._mode == "runtime":
             self._merge_CO2_emissions()
         self._mode = "runtime"

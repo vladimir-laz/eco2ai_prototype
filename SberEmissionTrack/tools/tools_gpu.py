@@ -107,6 +107,15 @@ class GPU():
             return gpus_name[0].decode("UTF-8")
         except:
             return "no available GPU device"
+    
+    def gpu_num(self):
+        try:
+            pynvml.nvmlInit()
+            deviceCount = pynvml.nvmlDeviceGetCount()
+            pynvml.nvmlShutdown()
+            return deviceCount
+        except: 
+            return ""
 
 def is_gpu_available():
     '''

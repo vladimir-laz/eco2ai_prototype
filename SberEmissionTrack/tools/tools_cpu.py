@@ -59,6 +59,9 @@ class CPU():
     def name(self,):
         return self._name
 
+    def cpu_num(self,):
+        return self._cpu_num
+
 def all_available_cpu():
     '''
     Prints all seeable cpu devices
