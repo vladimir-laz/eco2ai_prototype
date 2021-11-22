@@ -7,11 +7,14 @@ import numpy as np
 from re import sub
 import json
 from pkg_resources import resource_stream
+import sys
 from apscheduler.schedulers.background import BackgroundScheduler
 from IPython.core.magic import register_cell_magic
 
 from SberEmissionTrack.tools.tools_gpu import *
 from SberEmissionTrack.tools.tools_cpu import *
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 EMISSION_PER_MWT = 511.7942
 FROM_mWATTS_TO_kWATTH = 1000*1000*3600
