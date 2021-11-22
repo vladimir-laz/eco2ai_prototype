@@ -30,9 +30,9 @@ def get_params():
             dictionary = json.loads(json_file.read())
         else:
             dictionary = {
-                "PROJECT_NAME": "Deafult project name",
-                "EXPERIMENT_DESCRIPTION": "no experiment description",
-                "FILE_NAME": "emission.csv"
+                "project_name": "Deafult project name",
+                "experiment_description": "no experiment description",
+                "file_name": "emission.csv"
                 }
     return dictionary
 
@@ -64,9 +64,9 @@ class Tracker:
                  emission_level=EMISSION_PER_MWT,
                  ):
         self._params_dict = get_params()
-        self.project_name = project_name if project_name is not None else self._params_dict["PROJECT_NAME"]
-        self.experiment_description = experiment_description if experiment_description is not None else self._params_dict["EXPERIMENT_DESCRIPTION"]
-        self.save_file_name = save_file_name if save_file_name is not None else self._params_dict["FILE_NAME"]
+        self.project_name = project_name if project_name is not None else self._params_dict["project_name"]
+        self.experiment_description = experiment_description if experiment_description is not None else self._params_dict["experiment_description"]
+        self.save_file_name = save_file_name if save_file_name is not None else self._params_dict["file_name"]
         if (type(measure_period) == int or type(measure_period) == float) and measure_period <= 0:
             raise ValueError("measure_period should be positive number")
         self._measure_period = measure_period
@@ -206,12 +206,12 @@ def set_params(**params):
     for param in params:
         dictionary[param] = params[param]
     # print(dictionary)
-    if "PROJECT_NAME" not in dictionary:
-        dictionary["PROJECT_NAME"] = "default project name"
-    if "EXPERIMENT_DESCRIPTION" not in dictionary:
-        dictionary["EXPERIMENT_DESCRIPTION"] = "default experiment description"
-    if "FILE_NAME" not in dictionary:
-        dictionary["FILE_NAME"] = "emission.csv"
+    if "project_name" not in dictionary:
+        dictionary["project_name"] = "default project name"
+    if "experiment_description" not in dictionary:
+        dictionary["experiment_description"] = "default experiment description"
+    if "file_name" not in dictionary:
+        dictionary["file_name"] = "emission.csv"
     with open(filename, 'w') as json_file:
         json_file.write(json.dumps(dictionary))
     return dictionary
