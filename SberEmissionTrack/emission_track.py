@@ -225,6 +225,6 @@ def track(line, cell):
     tracker.start()
     print(globals())
     print(locals())
-    exec(cell, globals(), locals())
+    exec (cell, globals())
     tracker.stop()
     del tracker
