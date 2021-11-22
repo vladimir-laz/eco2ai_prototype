@@ -2,7 +2,8 @@ from .emission_track import (
     Tracker,
     available_devices, 
     set_params,
-    get_params
+    get_params,
+    track
 )
 
 from SberEmissionTrack.tools.tools_cpu import (
