@@ -99,7 +99,7 @@ class Tracker:
             dictionary["file_name"] = file_name
         else:
             dictionary["file_name"] = "emission.csv"
-        set_params(dictionary)
+        set_params(**dictionary)
         return dictionary
 
 
