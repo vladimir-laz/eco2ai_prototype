@@ -59,15 +59,15 @@ class Tracker:
     def __init__(self,
                  project_name=None,
                  experiment_description=None,
-                 save_file_name=None,
+                 file_name=None,
                  measure_period=10,
                  emission_level=EMISSION_PER_MWT,
                  ):
         self._params_dict = get_params()
         self.project_name = project_name if project_name is not None else self._params_dict["project_name"]
         self.experiment_description = experiment_description if experiment_description is not None else self._params_dict["experiment_description"]
-        self.save_file_name = save_file_name if save_file_name is not None else self._params_dict["file_name"]
-        self.get_set_params(self.project_name, self.experiment_description, self.save_file_name)
+        self.file_name = file_name if file_name is not None else self._params_dict["file_name"]
+        self.get_set_params(self.project_name, self.experiment_description, self.file_name)
         if (type(measure_period) == int or type(measure_period) == float) and measure_period <= 0:
             raise ValueError("measure_period should be positive number")
         self._measure_period = measure_period
@@ -117,12 +117,12 @@ class Tracker:
         # self.check_for_older_versions()
         duration = time.time() - self._start_time
         emissions = self._consumption * self._emission_level / FROM_kWATTH_TO_MWATTH
-        if not os.path.isfile(self.save_file_name):
-            with open(self.save_file_name, 'w') as file:
+        if not os.path.isfile(self.file_name):
+            with open(self.file_name, 'w') as file:
                 file.write("project_name,experiment_description(model type etc.),start_time,duration(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS,country\n")
                 file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()}/{self._cpu.tdp()} TDP: {self._cpu.cpu_num()} device(s),{self._gpu.name()} {self._gpu.gpu_num()} device(s),{self._os},{self._country}\n")
         else:
-            with open(self.save_file_name, "a") as file:
+            with open(self.file_name, "a") as file:
                 file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()}/{self._cpu.tdp()} TDP: {self._cpu.cpu_num()} device(s),{self._gpu.name()} {self._gpu.gpu_num()} device(s),{self._os},{self._country}\n")
         if self._mode == "runtime":
             self._merge_CO2_emissions()
@@ -130,19 +130,19 @@ class Tracker:
 
     # merges 2 CO2 emissions calculations together
     def _merge_CO2_emissions(self,):
-        dataframe = pd.read_csv(self.save_file_name)
+        dataframe = pd.read_csv(self.file_name)
         columns, values = dataframe.columns, dataframe.values
         row = values[-2]
         row[3:6] += values[-1][3:6]
         values = np.concatenate((values[:-2], row.reshape(1, -1)))
-        pd.DataFrame(values, columns=columns).to_csv(self.save_file_name, index=False)
+        pd.DataFrame(values, columns=columns).to_csv(self.file_name, index=False)
 
 
     # but after all, such verification should be deleted
     def check_for_older_versions(self,):
         # upgrades older emission.csv file up to new one
-        if os.path.isfile(self.save_file_name):
-            dataframe = pd.read_csv(self.save_file_name)
+        if os.path.isfile(self.file_name):
+            dataframe = pd.read_csv(self.file_name)
             columns = "project_name,experiment_description,start_time,duration(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS,country".split(',')
             if list(dataframe.columns.values) != columns:
                 dataframe = dataframe.assign(**{"CPU_name":"no cpu name", "GPU_name": "no gpu name","OS": "no os name", "country": "no country", "start_time": "no start time"})
@@ -161,7 +161,7 @@ class Tracker:
                     axis=1
                     )
                 dataframe.columns = columns
-                dataframe.to_csv(self.save_file_name, index=False)
+                dataframe.to_csv(self.file_name, index=False)
 
 
     def _func_for_sched(self):
