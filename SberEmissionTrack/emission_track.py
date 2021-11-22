@@ -63,7 +63,7 @@ class Tracker:
                  measure_period=10,
                  emission_level=EMISSION_PER_MWT,
                  ):
-        self._params_dict = self.get_set_params()
+        self._params_dict = self.get_set_params(project_name, experiment_description, save_file_name)
         self.project_name = project_name if project_name is not None else self._params_dict["project_name"]
         self.experiment_description = experiment_description if experiment_description is not None else self._params_dict["experiment_description"]
         self.save_file_name = save_file_name if save_file_name is not None else self._params_dict["file_name"]
