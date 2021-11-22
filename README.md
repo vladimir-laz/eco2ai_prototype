@@ -25,12 +25,12 @@ tracker = SberEmissionTrack.Tracker(project_name="YourProjectName", experiment_d
 
 tracker.start()
 
-*your gpu &(or) cpu calculations*
+<your gpu &(or) cpu calculations>
 
 tracker.stop()
 ```
 
-SberEmissionTrack also supports decorators. After decorated function execution, emissions informations will be written to file. See example below:
+SberEmissionTrack also supports decorators. Once decorated function executed emissions info will be written to file. See example below:
 ```python
 from SberEmittionTrack import track
 
@@ -41,7 +41,7 @@ def train_func(model, dataset, optimizer, epochs):
 train_func(your_model, your_dataset, your_optimizer, your_epochs)
 ```
 
-If you are bored to initialize the Tracker with custom parameters, then you can run set_params() function. Then, once it is called, every tracker will be created with set default parameters. See code below:
+If you are bored to initialize the Tracker with your custom parameters again and again, then you can run set_params() function. Then, once it is called, every tracker will be created with set default parameters, even after kernel kill. See code below:
 ```python
 from SberEmittionTrack import set_params, Tracker
 
