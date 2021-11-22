@@ -21,7 +21,7 @@ setup(
     package_data={
         "SberEmissionTrack": [
             "data/cpu_names.csv",
-            # "config.json"
+            "data/config.json"
         ]
     },
     include_package_data=True
