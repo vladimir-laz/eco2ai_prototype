@@ -195,17 +195,19 @@ def available_devices():
     # need to add RAM
 
 def set_params(**params):
-  dictionary = dict()
-  filename = resource_stream('SberEmissionTrack', 'data/config.txt').name
-  for param in params:
-    dictionary[param] = params[param]
-  # print(dictionary)
-  if "PROJECT_NAME" not in dictionary:
-    dictionary["PROJECT_NAME"] = "default project name"
-  if "EXPERIMENT_DESCRIPTION" not in dictionary:
-    dictionary["EXPERIMENT_DESCRIPTION"] = "default experiment description"
-  if "FILE_NAME" not in dictionary:
-    dictionary["FILE_NAME"] = "emission.csv"
-  with open(filename, 'w') as json_file:
-    json_file.write(json.dumps(dictionary))
-  return dictionary
+    dictionary = dict()
+    filename = resource_stream('SberEmissionTrack', 'data/config.txt').name
+    for param in params:
+        dictionary[param] = params[param]
+    # print(dictionary)
+    if "PROJECT_NAME" not in dictionary:
+        dictionary["PROJECT_NAME"] = "default project name"
+    if "EXPERIMENT_DESCRIPTION" not in dictionary:
+        dictionary["EXPERIMENT_DESCRIPTION"] = "default experiment description"
+    if "FILE_NAME" not in dictionary:
+        dictionary["FILE_NAME"] = "emission.csv"
+    with open(filename, 'w') as json_file:
+        json_file.write(json.dumps(dictionary))
+    global params_dict
+    params_dict = get_params()
+    return dictionary
