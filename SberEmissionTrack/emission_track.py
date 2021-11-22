@@ -35,7 +35,6 @@ def get_params():
                 }
     return dictionary
 
-params_dict = get_params()
 
 class Tracker:
     """
@@ -57,16 +56,16 @@ class Tracker:
     ----------------------------------------------------------------------
     """
     def __init__(self,
-                 project_name=params_dict["PROJECT_NAME"],
-                 experiment_description=params_dict["EXPERIMENT_DESCRIPTION"],
-                 save_file_name=params_dict["FILE_NAME"],
+                 project_name=None,
+                 experiment_description=None,
+                 save_file_name=None,
                  measure_period=10,
                  emission_level=EMISSION_PER_MWT,
                  ):
-        # print(PROJECT_NAME, EXPERIMENT_DESCRIPTION, FILE_NAME)
-        self.project_name = project_name
-        self.experiment_description = experiment_description
-        self.save_file_name = save_file_name
+        self._params_dict = get_params()
+        self.project_name = project_name if project_name is not None else self._params_dict["PROJECT_NAME"],
+        self.experiment_description = experiment_description if experiment_description is not None else self._params_dict["EXPERIMENT_DESCRIPTION"],
+        self.save_file_name = save_file_name if save_file_name is not None else self._params_dict["FILE_NAME"],
         if (type(measure_period) == int or type(measure_period) == float) and measure_period <= 0:
             raise ValueError("measure_period should be positive number")
         self._measure_period = measure_period
@@ -208,6 +207,4 @@ def set_params(**params):
         dictionary["FILE_NAME"] = "emission.csv"
     with open(filename, 'w') as json_file:
         json_file.write(json.dumps(dictionary))
-    global params_dict
-    params_dict = get_params()
     return dictionary
