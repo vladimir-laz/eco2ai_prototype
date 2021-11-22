@@ -81,6 +81,7 @@ class Tracker:
         self._country = self.define_country()
         # self._mode == "first_time" means that CO2 emissions is written to .csv file first time
         # self._mode == "runtime" means that CO2 emissions is written to file periodically during runtime 
+        # self._mode == "shut down" means that CO2 tracker is stopped
         self._mode = "first_time"
         
 
@@ -157,6 +158,9 @@ class Tracker:
         self._write_to_csv()
         self._consumption = 0
         self._start_time = time.time()
+        if self._mode == "shut down":
+            self._scheduler.remove_job("job")
+            self._scheduler.shutdown()
 
     def start(self):
         self._cpu = CPU()
@@ -172,8 +176,10 @@ class Tracker:
             raise Exception("Need to first start the tracker by running tracker.start()")
         self._scheduler.remove_job("job")
         self._scheduler.shutdown()
+
         self._func_for_sched() 
         self._write_to_csv()
+        self._mode = "shut down"
 
     def define_country(self,):
         region = sub(",", '',eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['region'])
