@@ -5,6 +5,7 @@ import pandas as pd
 import requests
 import numpy as np
 from re import sub
+import json
 from pkg_resources import resource_stream
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -18,9 +19,23 @@ FROM_kWATTH_TO_MWATTH = 1000
 # with open(JSON_FILE_NAME, 'w') as file:
 #     pass
 
-PROJECT_NAME = "Deafult project name"
-EXPERIMENT_DESCRIPTION = "no experiment description"
-FILE_NAME = "emission.csv"
+def get_params():
+    filename = resource_stream('SberEmissionTrack', 'data/config.txt').name
+    if not os.path.isfile(filename):
+        with open(filename, "w"):
+            pass
+    with open(filename, "r") as json_file:
+        if os.path.getsize(filename):
+            dictionary = json.loads(json_file.read())
+        else:
+            dictionary = {
+                "PROJECT_NAME": "Deafult project name",
+                "EXPERIMENT_DESCRIPTION": "no experiment description",
+                "FILE_NAME": "emission.csv"
+                }
+    return dictionary
+
+params_dict = get_params()
 
 class Tracker:
     """
@@ -42,9 +57,9 @@ class Tracker:
     ----------------------------------------------------------------------
     """
     def __init__(self,
-                 project_name=PROJECT_NAME,
-                 experiment_description=EXPERIMENT_DESCRIPTION,
-                 save_file_name=FILE_NAME,
+                 project_name=params_dict["PROJECT_NAME"],
+                 experiment_description=params_dict["EXPERIMENT_DESCRIPTION"],
+                 save_file_name=params_dict["FILE_NAME"],
                  measure_period=10,
                  emission_level=EMISSION_PER_MWT,
                  ):
@@ -179,4 +194,18 @@ def available_devices():
     all_available_gpu()
     # need to add RAM
 
-
+def set_params(**params):
+  dictionary = dict()
+  filename = resource_stream('SberEmissionTrack', 'data/config.txt').name
+  for param in params:
+    dictionary[param] = params[param]
+  # print(dictionary)
+  if "PROJECT_NAME" not in dictionary:
+    dictionary["PROJECT_NAME"] = "default project name"
+  if "EXPERIMENT_DESCRIPTION" not in dictionary:
+    dictionary["EXPERIMENT_DESCRIPTION"] = "default experiment description"
+  if "FILE_NAME" not in dictionary:
+    dictionary["FILE_NAME"] = "emission.csv"
+  with open(filename, 'w') as json_file:
+    json_file.write(json.dumps(dictionary))
+  return dictionary
