@@ -5,7 +5,9 @@ import pandas as pd
 import requests
 import numpy as np
 from re import sub
+import json
 from pkg_resources import resource_stream
+import sys
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from SberEmissionTrack.tools.tools_gpu import *
@@ -18,9 +20,22 @@ FROM_kWATTH_TO_MWATTH = 1000
 # with open(JSON_FILE_NAME, 'w') as file:
 #     pass
 
-PROJECT_NAME = "Deafult project name"
-EXPERIMENT_DESCRIPTION = "no experiment description"
-FILE_NAME = "emission.csv"
+def get_params():
+    filename = resource_stream('SberEmissionTrack', 'data/config.txt').name
+    if not os.path.isfile(filename):
+        with open(filename, "w"):
+            pass
+    with open(filename, "r") as json_file:
+        if os.path.getsize(filename):
+            dictionary = json.loads(json_file.read())
+        else:
+            dictionary = {
+                "PROJECT_NAME": "Deafult project name",
+                "EXPERIMENT_DESCRIPTION": "no experiment description",
+                "FILE_NAME": "emission.csv"
+                }
+    return dictionary
+
 
 class Tracker:
     """
@@ -42,16 +57,16 @@ class Tracker:
     ----------------------------------------------------------------------
     """
     def __init__(self,
-                 project_name=PROJECT_NAME,
-                 experiment_description=EXPERIMENT_DESCRIPTION,
-                 save_file_name=FILE_NAME,
+                 project_name=None,
+                 experiment_description=None,
+                 save_file_name=None,
                  measure_period=10,
                  emission_level=EMISSION_PER_MWT,
                  ):
-        # print(PROJECT_NAME, EXPERIMENT_DESCRIPTION, FILE_NAME)
-        self.project_name = project_name
-        self.experiment_description = experiment_description
-        self.save_file_name = save_file_name
+        self._params_dict = get_params()
+        self.project_name = project_name if project_name is not None else self._params_dict["PROJECT_NAME"]
+        self.experiment_description = experiment_description if experiment_description is not None else self._params_dict["EXPERIMENT_DESCRIPTION"]
+        self.save_file_name = save_file_name if save_file_name is not None else self._params_dict["FILE_NAME"]
         if (type(measure_period) == int or type(measure_period) == float) and measure_period <= 0:
             raise ValueError("measure_period should be positive number")
         self._measure_period = measure_period
@@ -67,6 +82,7 @@ class Tracker:
         self._country = self.define_country()
         # self._mode == "first_time" means that CO2 emissions is written to .csv file first time
         # self._mode == "runtime" means that CO2 emissions is written to file periodically during runtime 
+        # self._mode == "shut down" means that CO2 tracker is stopped
         self._mode = "first_time"
         
 
@@ -88,10 +104,10 @@ class Tracker:
         if not os.path.isfile(self.save_file_name):
             with open(self.save_file_name, 'w') as file:
                 file.write("project_name,experiment_description(model type etc.),start_time,duration(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS,country\n")
-                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()}/{self._cpu.tdp()}TDP: {self._cpu.cpu_num()} device(s),{self._gpu.name()} {self._gpu.gpu_num()} device(s),{self._os},{self._country}\n")
+                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()}/{self._cpu.tdp()} TDP: {self._cpu.cpu_num()} device(s),{self._gpu.name()} {self._gpu.gpu_num()} device(s),{self._os},{self._country}\n")
         else:
             with open(self.save_file_name, "a") as file:
-                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()}/{self._cpu.tdp()}TDP: {self._cpu.cpu_num()} device(s),{self._gpu.name()} {self._gpu.gpu_num()} device(s),{self._os},{self._country}\n")
+                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()}/{self._cpu.tdp()} TDP: {self._cpu.cpu_num()} device(s),{self._gpu.name()} {self._gpu.gpu_num()} device(s),{self._os},{self._country}\n")
         if self._mode == "runtime":
             self._merge_CO2_emissions()
         self._mode = "runtime"
@@ -143,6 +159,9 @@ class Tracker:
         self._write_to_csv()
         self._consumption = 0
         self._start_time = time.time()
+        if self._mode == "shut down":
+            self._scheduler.remove_job("job")
+            self._scheduler.shutdown()
 
     def start(self):
         self._cpu = CPU()
@@ -158,8 +177,10 @@ class Tracker:
             raise Exception("Need to first start the tracker by running tracker.start()")
         self._scheduler.remove_job("job")
         self._scheduler.shutdown()
+
         self._func_for_sched() 
         self._write_to_csv()
+        self._mode = "shut down"
 
     def define_country(self,):
         region = sub(",", '',eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['region'])
@@ -179,4 +200,29 @@ def available_devices():
     all_available_gpu()
     # need to add RAM
 
+def set_params(**params):
+    dictionary = dict()
+    filename = resource_stream('SberEmissionTrack', 'data/config.txt').name
+    for param in params:
+        dictionary[param] = params[param]
+    # print(dictionary)
+    if "PROJECT_NAME" not in dictionary:
+        dictionary["PROJECT_NAME"] = "default project name"
+    if "EXPERIMENT_DESCRIPTION" not in dictionary:
+        dictionary["EXPERIMENT_DESCRIPTION"] = "default experiment description"
+    if "FILE_NAME" not in dictionary:
+        dictionary["FILE_NAME"] = "emission.csv"
+    with open(filename, 'w') as json_file:
+        json_file.write(json.dumps(dictionary))
+    return dictionary
 
+def track(func):
+  def inner(*args):
+    tracker = Tracker()
+    tracker.start()
+    # print(args)
+    returned = func(*args)
+    tracker.stop()
+    del tracker
+    return returned
+  return inner

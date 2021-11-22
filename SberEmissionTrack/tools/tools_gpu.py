@@ -21,9 +21,7 @@ class GPU():
                           category=NoGPUWarning)
         if self.is_gpu_available:
             self._start = time.time()
-    
-    def set_consumption_zero(self):
-        self._consumption = 0
+
     
     def calculate_consumption(self):
         if not self.is_gpu_available:
