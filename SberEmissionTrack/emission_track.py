@@ -63,7 +63,7 @@ class Tracker:
                  measure_period=10,
                  emission_level=EMISSION_PER_MWT,
                  ):
-        self._params_dict = get_params()
+        self._params_dict = self.get_set_params()
         self.project_name = project_name if project_name is not None else self._params_dict["project_name"]
         self.experiment_description = experiment_description if experiment_description is not None else self._params_dict["experiment_description"]
         self.save_file_name = save_file_name if save_file_name is not None else self._params_dict["file_name"]
@@ -84,7 +84,24 @@ class Tracker:
         # self._mode == "runtime" means that CO2 emissions is written to file periodically during runtime 
         # self._mode == "shut down" means that CO2 tracker is stopped
         self._mode = "first_time"
-        
+    
+    def get_set_params(self, project_name, experiment_description, file_name):
+        dictionary = dict()
+        if project_name is not None:
+            dictionary["project_name"] = project_name
+        else: 
+            dictionary["project_name"] = "default project name"
+        if experiment_description is not None:
+            dictionary["experiment_description"] = experiment_description
+        else:
+            dictionary["experiment_description"] = "default experiment description"
+        if file_name is not None:
+            dictionary["file_name"] = file_name
+        else:
+            dictionary["file_name"] = "emission.csv"
+        set_params(dictionary)
+        return dictionary
+
 
     def consumption(self):
         return self._consumption
