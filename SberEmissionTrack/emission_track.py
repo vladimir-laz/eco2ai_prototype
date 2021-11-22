@@ -9,7 +9,6 @@ import json
 from pkg_resources import resource_stream
 import sys
 from apscheduler.schedulers.background import BackgroundScheduler
-from IPython.core.magic import register_cell_magic
 
 from SberEmissionTrack.tools.tools_gpu import *
 from SberEmissionTrack.tools.tools_cpu import *
@@ -217,16 +216,13 @@ def set_params(**params):
         json_file.write(json.dumps(dictionary))
     return dictionary
 
-@register_cell_magic
-def track(line, cell):
-    lines = []
-    for line in cell.split('\n'):
-      lines.append(line)
+def track(func):
+  def inner(*args):
     tracker = Tracker()
     tracker.start()
-    # print(globals())
-    # print(locals())
-    exec('print(dir())')
-    exec (cell, globals())
+    # print(args)
+    returned = func(*args)
     tracker.stop()
     del tracker
+    return returned
+  return inner
