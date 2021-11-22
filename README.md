@@ -30,7 +30,7 @@ tracker.start()
 tracker.stop()
 ```
 
-SberEmissionTrack also supports decorators. Once decorated function executed emissions info will be written to file. See example below:
+SberEmissionTrack also supports decorators. Once decorated function executed, emissions info will be written to the file. See example below:
 ```python
 from SberEmittionTrack import track
 
@@ -42,7 +42,7 @@ train_func(your_model, your_dataset, your_optimizer, your_epochs)
 ```
 
 
-For your convenience every time you initilize a Tracker object with your custom parameters, this settings will be saved until library is uninstalled, and then every new tracker will be created with your custom setting(if you will create new tracker with new parameters, then thay will be saved instead of old ones). For example:
+For your convenience every time you initilize a Tracker object with your custom parameters, this settings will be saved until library is uninstalled, and then every new tracker will be created with your custom settings(if you will create new tracker with new parameters, then they will be saved instead of old ones). For example:
 
 ```python
 
@@ -50,7 +50,7 @@ import SberEmissionTrack
 
 tracker = SberEmissionTrack.Tracker(
     project_name="YourProjectName", 
-    experiment_description="training the <your model> model",
+    experiment_description="training <your model> model",
     file_name="emission.csv"
     )
 
@@ -60,7 +60,7 @@ tracker.stop()
 
 ...
 
-# now, we want to create a new tracker for enw calculations
+# now, we want to create a new tracker for new calculations
 tracker = SberEmissionTrack.Tracker()
 # it's equivelent to:
 # tracker = SberEmissionTrack.Tracker(
