@@ -41,7 +41,41 @@ def train_func(model, dataset, optimizer, epochs):
 train_func(your_model, your_dataset, your_optimizer, your_epochs)
 ```
 
-If you are bored to initialize the Tracker with your custom parameters again and again, then you can run set_params() function. Then, once it is called, every tracker will be created with set default parameters, even after kernel kill. See code below:
+
+For your convenience every time you initilize a Tracker object with your custom parameters, this settings will be saved until library is uninstalled, and then every new tracker will be created with your custom setting(if you will create new tracker with new parameters, then thay will be saved instead of old ones). For example:
+
+```python
+
+import SberEmissionTrack
+
+tracker = SberEmissionTrack.Tracker(
+    project_name="YourProjectName", 
+    experiment_description="training the <your model> model",
+    file_name="emission.csv"
+    )
+
+tracker.start()
+<your gpu &(or) cpu calculations>
+tracker.stop()
+
+...
+
+# now, we want to create a new tracker for enw calculations
+tracker = SberEmissionTrack.Tracker()
+# it's equivelent to:
+# tracker = SberEmissionTrack.Tracker(
+#     project_name="YourProjectName", 
+#     experiment_description="training the <your model> model",
+#     file_name="emission.csv"
+# )
+tracker.start()
+<your gpu &(or) cpu calculations>
+tracker.stop()
+
+```
+
+You can also set parameters using set_params() function, like in the example below:
+
 ```python
 from SberEmittionTrack import set_params, Tracker
 
@@ -61,8 +95,8 @@ tracker = Tracker()
 tracker.start()
 <your code>
 tracker.stop()
-
 ```
+
 
 
 There is [sber_emission_tracker_guide.ipynb](https://github.com/vladimir-laz/AIRIEmisisonTracker/blob/704ff88468f6ad403d69a63738888e1a3c41f59b/guide/sber_emission_tracker_guide.ipynb)  - useful jupyter notebook with more examples and notes. We highly recommend to check it out beforehand.
