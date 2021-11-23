@@ -1,7 +1,7 @@
 # SberEmisisonTracker
 
 ## Requirements
-SberEmissionTrack need to get util-linux in order to work correctly on Linux. 
+If you are running your code in Linux, you will need to get util-linux installed to woork correctly(usually, it is installed by default)
 
 ##  Installation
 As this project is still under development, in order to utilize SberEmisisonTrack correctly please run 
