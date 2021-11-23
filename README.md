@@ -32,7 +32,7 @@ tracker.stop()
 
 SberEmissionTrack also supports decorators. Once decorated function executed, emissions info will be written to the file. See example below:
 ```python
-from SberEmittionTrack import track
+from SberEmissionTrack import track
 
 @track
 def train_func(model, dataset, optimizer, epochs):
@@ -77,7 +77,7 @@ tracker.stop()
 You can also set parameters using set_params() function, like in the example below:
 
 ```python
-from SberEmittionTrack import set_params, Tracker
+from SberEmissionTrack import set_params, Tracker
 
 set_params(
     project_name="My_default_project_name",
