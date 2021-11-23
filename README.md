@@ -15,7 +15,7 @@ Next step to install the package is to run the following command in your termina
 pip install git+git://github.com/vladimir-laz/AIRIEmisisonTracker.git
 ```
 In order to all dependencies to be set correctly you may need to restart your kernel after package installation
-## Use example
+## Use examples
 SberEmissionTrack's interface is quite simple. Here is a the most straightforward usage example:
 ```python
 
