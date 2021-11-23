@@ -242,3 +242,7 @@ def track(func):
     del tracker
     return returned
   return inner
+
+
+def trackit():
+    pass
