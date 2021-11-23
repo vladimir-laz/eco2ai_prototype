@@ -14,7 +14,7 @@ setup(
     name = 'SberEmissionTrack',
     version = '1.0.0',
     author="Vladimir Lazarev",
-    url = 'https://github.com/vladimir-laz/AIRIEmisisonTracker.git',
+    url = 'https://github.com/vladimir-laz/SberEmissionTrack.git',
     description = long_description,
     packages = find_packages(),
     install_requires=DEPENDENCIES,
