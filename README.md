@@ -12,7 +12,7 @@ before the installation
 
 Next step to install the package is to run the following command in your terminal:
 ```bash
-pip install git+git://github.com/vladimir-laz/AIRIEmisisonTracker.git
+pip install git+git://github.com/vladimir-laz/SberEmissionTrack.git
 ```
 In order to all dependencies to be set correctly you may need to restart your kernel after package installation
 ## Use examples
@@ -53,6 +53,7 @@ tracker = SberEmissionTrack.Tracker(
     experiment_description="training <your model> model",
     file_name="emission.csv"
     )
+
 
 tracker.start()
 <your gpu &(or) cpu calculations>
