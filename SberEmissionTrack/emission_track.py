@@ -164,7 +164,7 @@ class Tracker:
                     axis=1
                     )
                 dataframe.columns = columns
-                dataframe.to_csv(self.file_name, index=False, sep='\t')
+                dataframe.to_csv(self.file_name, index=False, sep='\t', delimiter='\t')
 
 
     def _func_for_sched(self):
