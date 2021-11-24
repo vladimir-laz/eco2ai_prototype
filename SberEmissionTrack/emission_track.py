@@ -119,30 +119,37 @@ class Tracker:
         emissions = self._consumption * self._emission_level / FROM_kWATTH_TO_MWATTH
         if not os.path.isfile(self.file_name):
             with open(self.file_name, 'w') as file:
-                file.write("project_name,experiment_description(model type etc.),start_time,duration(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS,country\n")
-                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()}/{self._cpu.tdp()} TDP: {self._cpu.cpu_num()} device(s),{self._gpu.name()} {self._gpu.gpu_num()} device(s),{self._os},{self._country}\n")
+                file.write("project_name\texperiment_description(model type etc.)\tstart_time\tduration(s)\tpower_consumption(kWTh)\tCO2_emissions(kg)\tCPU_name\tGPU_name\tOS\tcountry\n")
+                file.write(f"{self.project_name}\t{self.experiment_description}\t{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))}\t{duration}\t{self._consumption}\t{emissions}\t{self._cpu.name()}/{self._cpu.tdp()} TDP: {self._cpu.cpu_num()} device(s)\t{self._gpu.name()} {self._gpu.gpu_num()} device(s)\t{self._os}\t{self._country}\n")
         else:
             with open(self.file_name, "a") as file:
-                file.write(f"{self.project_name},{self.experiment_description},{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))},{duration},{self._consumption},{emissions},{self._cpu.name()}/{self._cpu.tdp()} TDP: {self._cpu.cpu_num()} device(s),{self._gpu.name()} {self._gpu.gpu_num()} device(s),{self._os},{self._country}\n")
+                file.write(f"{self.project_name}\t{self.experiment_description}\t{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self._start_time))}\t{duration}\t{self._consumption}\t{emissions}\t{self._cpu.name()}/{self._cpu.tdp()} TDP: {self._cpu.cpu_num()} device(s)\t{self._gpu.name()} {self._gpu.gpu_num()} device(s)\t{self._os}\t{self._country}\n")
         if self._mode == "runtime":
             self._merge_CO2_emissions()
         self._mode = "runtime"
 
+
     # merges 2 CO2 emissions calculations together
     def _merge_CO2_emissions(self,):
-        dataframe = pd.read_csv(self.file_name)
+        try:
+            dataframe = pd.read_csv(self.file_name, sep='\t')
+        except:
+            dataframe = pd.read_csv(self.file_name)
         columns, values = dataframe.columns, dataframe.values
         row = values[-2]
         row[3:6] += values[-1][3:6]
         values = np.concatenate((values[:-2], row.reshape(1, -1)))
-        pd.DataFrame(values, columns=columns).to_csv(self.file_name, index=False)
+        pd.DataFrame(values, columns=columns).to_csv(self.file_name, index=False, sep='\t')
 
 
     # but after all, such verification should be deleted
     def check_for_older_versions(self,):
         # upgrades older emission.csv file up to new one
         if os.path.isfile(self.file_name):
-            dataframe = pd.read_csv(self.file_name)
+            try:
+                dataframe = pd.read_csv(self.file_name, sep='\t')
+            except:
+                dataframe = pd.read_csv(self.file_name)
             columns = "project_name,experiment_description,start_time,duration(s),power_consumption(kWTh),CO2_emissions(kg),CPU_name,GPU_name,OS,country".split(',')
             if list(dataframe.columns.values) != columns:
                 dataframe = dataframe.assign(**{"CPU_name":"no cpu name", "GPU_name": "no gpu name","OS": "no os name", "country": "no country", "start_time": "no start time"})
@@ -161,7 +168,7 @@ class Tracker:
                     axis=1
                     )
                 dataframe.columns = columns
-                dataframe.to_csv(self.file_name, index=False)
+                dataframe.to_csv(self.file_name, index=False, sep='\t', delimiter='\t')
 
 
     def _func_for_sched(self):
