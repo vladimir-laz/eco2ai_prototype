@@ -128,6 +128,7 @@ class Tracker:
             self._merge_CO2_emissions()
         self._mode = "runtime"
 
+
     # merges 2 CO2 emissions calculations together
     def _merge_CO2_emissions(self,):
         try:
