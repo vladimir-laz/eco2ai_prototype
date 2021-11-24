@@ -138,7 +138,7 @@ class Tracker:
         row = values[-2]
         row[3:6] += values[-1][3:6]
         values = np.concatenate((values[:-2], row.reshape(1, -1)))
-        pd.DataFrame(values, columns=columns).to_csv(self.file_name, index=False)
+        pd.DataFrame(values, columns=columns).to_csv(self.file_name, index=False, sep='\t')
 
 
     # but after all, such verification should be deleted
