@@ -103,7 +103,7 @@ def transform_cpu_name(f_string):
     Drops all the waste tokens, patterns and words from a cpu name
     '''
     # dropping all the waste tokens and patterns:
-    f_string = re.sub('(\(R\))|(®)|(™)|(\(TM\))|(@.*)|(\S*GHz\S*)|(\[.*\])|( \d-Core)', '', f_string)
+    f_string = re.sub('(\(R\))|(®)|(™)|(\(TM\))|(@.*)|(\S*GHz\S*)|(\[.*\])|( \d-Core)|(\(.*\))', '', f_string)
 
     # dropping all the waste words:
     array = re.split(" ", f_string)
