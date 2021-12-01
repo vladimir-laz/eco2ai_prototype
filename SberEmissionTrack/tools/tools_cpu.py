@@ -6,6 +6,7 @@ import os
 import pandas as pd
 import numpy as np
 import warnings
+import platform
 from pkg_resources import resource_stream
 
 
@@ -15,6 +16,9 @@ NUM_CALCULATION = 200
 CPU_TABLE_NAME = resource_stream('SberEmissionTrack', 'data/cpu_names.csv').name
 
 class NoCPUinTableWarning(Warning):
+    pass
+
+class NoNeededLibrary(Warning):
     pass
 
 class CPU():
@@ -81,21 +85,32 @@ def number_of_cpu():
     Returns number of cpu sockets(physical cpu processors)
     If the body the function runs with error, it will return 1, which means there is only one cpu device
     '''
-    try:
-        "returns cpu sockets number"
-        # running terminal command, getting output
-        string = os.popen("lscpu")
-        output = string.read()
-        output
-        # dictionary creation
-        dictionary = dict()
-        for i in output.split('\n'):
-            tmp = i.split(':')
-            if len(tmp) == 2:
-                dictionary[tmp[0]] = tmp[1]
-        return min(int(dictionary["Socket(s)"]), int(dictionary["NUMA node(s)"]))
-    except:
-        return 1
+    operating_system = platform.system()
+    result = None
+    if operating_system == "Darwin":
+        operating_system = "MacOS"
+
+    if operating_system == "Linux":
+        try:
+            # returns cpu sockets number
+            # running terminal command, getting output
+            string = os.popen("lscpu")
+            output = string.read()
+            output
+            # dictionary creation
+            dictionary = dict()
+            for i in output.split('\n'):
+                tmp = i.split(':')
+                if len(tmp) == 2:
+                    dictionary[tmp[0]] = tmp[1]
+            result = min(int(dictionary["Socket(s)"]), int(dictionary["NUMA node(s)"]))
+        except:
+            warnings.warn(message="\nYou probably should have installed 'util-linux' to deretmine cpu number correctly\n\n", 
+                          category=NoNeededLibrary)
+            result = 1
+    else: 
+        result = 1
+    return result
 
 
 def transform_cpu_name(f_string):
