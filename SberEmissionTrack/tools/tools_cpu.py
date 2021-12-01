@@ -105,7 +105,7 @@ def number_of_cpu():
                     dictionary[tmp[0]] = tmp[1]
             result = min(int(dictionary["Socket(s)"]), int(dictionary["NUMA node(s)"]))
         except:
-            warnings.warn(message="\nYou probably should have installed 'util-linux' to deretmine cpu number correctly\n\n", 
+            warnings.warn(message="\nYou probably should have installed 'util-linux' to deretmine cpu number correctly\nFor now, number of cpu devices is set to 1\n\n", 
                           category=NoNeededLibrary)
             result = 1
     else: 

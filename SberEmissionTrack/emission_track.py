@@ -16,9 +16,7 @@ from SberEmissionTrack.tools.tools_cpu import *
 EMISSION_PER_MWT = 511.7942
 FROM_mWATTS_TO_kWATTH = 1000*1000*3600
 FROM_kWATTH_TO_MWATTH = 1000
-# JSON_FILE_NAME = resource_stream('SberEmissionTrack', 'config.json').name
-# with open(JSON_FILE_NAME, 'w') as file:
-#     pass
+
 
 def get_params():
     filename = resource_stream('SberEmissionTrack', 'data/config.txt').name
@@ -210,10 +208,6 @@ class Tracker:
         country = sub(",", '',eval(requests.get("https://ipinfo.io/").content.decode('ascii'))['country'])
         return f"{region}/{country}"
 
-# def from_json(json_file=JSON_FILE_NAME):
-#     with open(JSON_FILE_NAME, 'r') as json_file:
-#         pass
-#     pass
 
 def available_devices():
     '''
@@ -249,7 +243,3 @@ def track(func):
     del tracker
     return returned
   return inner
-
-
-def trackit():
-    pass
