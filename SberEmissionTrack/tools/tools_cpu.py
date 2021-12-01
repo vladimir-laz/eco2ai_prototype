@@ -139,42 +139,42 @@ def find_max_tdp(elements):
     if len(elements) == 1:
         return float(elements[0][1])
 
-    max_element_number = 0
     max_value = 0
-    for index, element in enumerate(elements):
-        if float(element[1]) > max_value:
-            max_value = float(element[1])
-            max_element_number = index
+    for index in range(len(elements)):
+        if float(elements[index][1]) > max_value:
+            max_value = float(elements[index][1])
     return max_value
 
+def get_patterns(cpu_name):
+    return re.findall("(\S*\d+\S*)", cpu_name)
 
 # searching cpu name in cpu table
 def find_tdp_value(f_string, f_table_name=CPU_TABLE_NAME, constant_value=CONSTANT_CONSUMPTION):
-    '''
-    
-    '''
     # firstly, we try to find transformed cpu name in the cpu table:
     f_table = pd.read_csv(f_table_name)
     f_string, patterns = transform_cpu_name(f_string)
     f_table = f_table[["Model", "TDP"]].values
+    suitable_elements = f_table[f_table[:, 0] == f_string]
 
-    suitable_elements = f_table[f_table[:, 0] == f_string].reshape(-1)
     if suitable_elements.shape[0] > 0:
-        return float(suitable_elements[1])
+        # print("suitable elements: ", suitable_elements)
+        # print("element is found in the table!")  # OK
+        # if there are more than one suitable elements, return one with maximum TDP value
+        return find_max_tdp(suitable_elements)
     # secondly, if needed element isn't found in the table,
-    # then we try to find main patterns(i5-10400f, for instanse) in cpu names and take suitable values:
-    # if there is no any patterns found in cpu name, we simply return constant TDP value
+    # then we try to find patterns in cpu names and return suitable values:
+    # if there is no any patterns in cpu name, we simply return constant consumption value
     if len(patterns) == 0:
         warnings.warn(message="\n\nYour CPU device is not found in our database\nCPU TDP is set to constant value 100\n", 
                       category=NoCPUinTableWarning)
         return constant_value
-    
-    # appending all the suitable elements to an array
+
+    # appending to array all suitable for at least one of the patterns elements
     suitable_elements = []
     for element in f_table:
         flag = False
         for pattern in patterns:
-            if pattern in element[0]:
+            if pattern in get_patterns(element[0]):
                 flag = True
         if flag:
             suitable_elements.append(element)
@@ -187,7 +187,7 @@ def find_tdp_value(f_string, f_table_name=CPU_TABLE_NAME, constant_value=CONSTAN
     if len(suitable_elements) == 0:
         warnings.warn(message="\n\nYour CPU device is not found in our database\nCPU TDP is set to constant value 100\n", 
                       category=NoCPUinTableWarning)
-        return constant_value
+        return CONSTANT_CONSUMPTION
     elif len(suitable_elements) == 1:
         return suitable_elements[0][1]
     else:
