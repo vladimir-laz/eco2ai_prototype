@@ -127,8 +127,7 @@ def transform_cpu_name(f_string):
             array.remove(i)
     f_string = " ".join(array)
     patterns = re.findall("(\S*\d+\S*)", f_string)
-    for i in re.findall("(Ryzen Threadripper)|(Ryzen)|(EPYC)|(Athlon)|(Xeon Gold)|(Xeon Bronze)|(Xeon Silver)|(Xeon Platinum)|(Xeon)|(Core)|(Celeron)|(Atom)|(Pentium)",
-                        string):
+    for i in re.findall("(Ryzen Threadripper)|(Ryzen)|(EPYC)|(Athlon)|(Xeon Gold)|(Xeon Bronze)|(Xeon Silver)|(Xeon Platinum)|(Xeon)|(Core)|(Celeron)|(Atom)|(Pentium)", f_string):
         patterns += i
     patterns = list(set(patterns))
     if '' in patterns:
