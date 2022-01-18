@@ -1,6 +1,7 @@
 # SberEmisisonTracker
  
 ## Requirements
+You should have installed git on your computer or server.
 If you are running your code in Linux, you will need to get util-linux installed to woork correctly(usually, it is installed by default)
 
 ##  Installation
@@ -12,7 +13,7 @@ before the installation
 
 Next step to install the package is to run the following command in your terminal:
 ```bash
-pip install git+git://github.com/vladimir-laz/SberEmissionTrack.git
+pip install --user git+git://github.com/vladimir-laz/SberEmissionTrack.git
 ```
 In order to all dependencies to be set correctly you may need to restart your kernel after package installation
 ## Use examples
