@@ -6,6 +6,7 @@ import os
 import pandas as pd
 import numpy as np
 import warnings
+import platform
 from pkg_resources import resource_stream
 
 
@@ -15,6 +16,9 @@ NUM_CALCULATION = 200
 CPU_TABLE_NAME = resource_stream('SberEmissionTrack', 'data/cpu_names.csv').name
 
 class NoCPUinTableWarning(Warning):
+    pass
+
+class NoNeededLibrary(Warning):
     pass
 
 class CPU():
@@ -81,21 +85,32 @@ def number_of_cpu():
     Returns number of cpu sockets(physical cpu processors)
     If the body the function runs with error, it will return 1, which means there is only one cpu device
     '''
-    try:
-        "returns cpu sockets number"
-        # running terminal command, getting output
-        string = os.popen("lscpu")
-        output = string.read()
-        output
-        # dictionary creation
-        dictionary = dict()
-        for i in output.split('\n'):
-            tmp = i.split(':')
-            if len(tmp) == 2:
-                dictionary[tmp[0]] = tmp[1]
-        return min(int(dictionary["Socket(s)"]), int(dictionary["NUMA node(s)"]))
-    except:
-        return 1
+    operating_system = platform.system()
+    result = None
+    if operating_system == "Darwin":
+        operating_system = "MacOS"
+
+    if operating_system == "Linux":
+        try:
+            # returns cpu sockets number
+            # running terminal command, getting output
+            string = os.popen("lscpu")
+            output = string.read()
+            output
+            # dictionary creation
+            dictionary = dict()
+            for i in output.split('\n'):
+                tmp = i.split(':')
+                if len(tmp) == 2:
+                    dictionary[tmp[0]] = tmp[1]
+            result = min(int(dictionary["Socket(s)"]), int(dictionary["NUMA node(s)"]))
+        except:
+            warnings.warn(message="\nYou probably should have installed 'util-linux' to deretmine cpu number correctly\nFor now, number of cpu devices is set to 1\n\n", 
+                          category=NoNeededLibrary)
+            result = 1
+    else: 
+        result = 1
+    return result
 
 
 def transform_cpu_name(f_string):
@@ -103,7 +118,7 @@ def transform_cpu_name(f_string):
     Drops all the waste tokens, patterns and words from a cpu name
     '''
     # dropping all the waste tokens and patterns:
-    f_string = re.sub('(\(R\))|(®)|(™)|(\(TM\))|(@.*)|(\S*GHz\S*)|(\[.*\])|( \d-core)', '', f_string)
+    f_string = re.sub('(\(R\))|(®)|(™)|(\(TM\))|(@.*)|(\S*GHz\S*)|(\[.*\])|( \d-Core)|(\(.*\))', '', f_string)
 
     # dropping all the waste words:
     array = re.split(" ", f_string)
@@ -112,6 +127,11 @@ def transform_cpu_name(f_string):
             array.remove(i)
     f_string = " ".join(array)
     patterns = re.findall("(\S*\d+\S*)", f_string)
+    for i in re.findall("(Ryzen Threadripper)|(Ryzen)|(EPYC)|(Athlon)|(Xeon Gold)|(Xeon Bronze)|(Xeon Silver)|(Xeon Platinum)|(Xeon)|(Core)|(Celeron)|(Atom)|(Pentium)", f_string):
+        patterns += i
+    patterns = list(set(patterns))
+    if '' in patterns:
+        patterns.remove('')
     return f_string, patterns
 
 
@@ -124,45 +144,54 @@ def find_max_tdp(elements):
     if len(elements) == 1:
         return float(elements[0][1])
 
-    max_element_number = 0
     max_value = 0
-    for index, element in enumerate(elements):
-        if float(element[1]) > max_value:
-            max_value = float(element[1])
-            max_element_number = index
+    for index in range(len(elements)):
+        if float(elements[index][1]) > max_value:
+            max_value = float(elements[index][1])
     return max_value
 
+def get_patterns(cpu_name):
+    array = re.findall("(\S*\d+\S*)", cpu_name)
+    for i in re.findall("(Ryzen Threadripper)|(Ryzen)|(EPYC)|(Athlon)|(Xeon Gold)|(Xeon Bronze)|(Xeon Silver)|(Xeon Platinum)|(Xeon)|(Core)|(Celeron)|(Atom)|(Pentium)",
+                        cpu_name):
+        array += i
+    array = list(set(array))
+    if '' in array:
+        array.remove('')
+    return array
 
 # searching cpu name in cpu table
-def find_tdp_value(f_string, f_table_name=CPU_TABLE_NAME, constant_value=CONSTANT_CONSUMPTION):
+def find_tdp_value(f_string, f_table_name, constant_value=CONSTANT_CONSUMPTION):
     '''
-    
+    Takes cpu names as input
+    Returns cpu with maximum TDP value
     '''
     # firstly, we try to find transformed cpu name in the cpu table:
     f_table = pd.read_csv(f_table_name)
     f_string, patterns = transform_cpu_name(f_string)
     f_table = f_table[["Model", "TDP"]].values
-
-    suitable_elements = f_table[f_table[:, 0] == f_string].reshape(-1)
+    suitable_elements = f_table[f_table[:, 0] == f_string]
     if suitable_elements.shape[0] > 0:
-        return float(suitable_elements[1])
+        # if there are more than one suitable elements, return one with maximum TDP value
+        return find_max_tdp(suitable_elements)
     # secondly, if needed element isn't found in the table,
-    # then we try to find main patterns(i5-10400f, for instanse) in cpu names and take suitable values:
-    # if there is no any patterns found in cpu name, we simply return constant TDP value
+    # then we try to find patterns in cpu names and return suitable values:
+    # if there is no any patterns in cpu name, we simply return constant consumption value
     if len(patterns) == 0:
         warnings.warn(message="\n\nYour CPU device is not found in our database\nCPU TDP is set to constant value 100\n", 
                       category=NoCPUinTableWarning)
         return constant_value
-    
-    # appending all the suitable elements to an array
+    # appending to array all suitable for at least one of the patterns elements
     suitable_elements = []
     for element in f_table:
-        flag = False
+        flag = 0
+        tmp_patterns = get_patterns(element[0])
         for pattern in patterns:
-            if pattern in element[0]:
-                flag = True
+            if pattern in tmp_patterns:
+                flag += 1
         if flag:
-            suitable_elements.append(element)
+            # suitable_elements.append(element)
+            suitable_elements.append((element, flag))
 
     # if there is only one suitable element, we return this element.
     # If there is no suitable elements, we return constant value
@@ -172,19 +201,15 @@ def find_tdp_value(f_string, f_table_name=CPU_TABLE_NAME, constant_value=CONSTAN
     if len(suitable_elements) == 0:
         warnings.warn(message="\n\nYour CPU device is not found in our database\nCPU TDP is set to constant value 100\n", 
                       category=NoCPUinTableWarning)
-        return constant_value
+        return CONSTANT_CONSUMPTION
     elif len(suitable_elements) == 1:
-        return suitable_elements[0][1]
+        return float(suitable_elements[0][0][1])
     else:
+        suitable_elements.sort(key=lambda x: x[1], reverse=True)
+        max_coincidence = suitable_elements[0][1]
+
         tmp_elements = []
         for element in suitable_elements:
-            flag = 1
-            for pattern in patterns:
-                if pattern not in element[0]:
-                    flag *= 0
-            if flag == 1:
-                tmp_elements.append(element)
-        if len(tmp_elements) != 0:
-            return find_max_tdp(tmp_elements)
-        else:
-            return find_max_tdp(suitable_elements)
+            if element[1] == max_coincidence:
+                tmp_elements.append(element[0])
+        return find_max_tdp(tmp_elements)
