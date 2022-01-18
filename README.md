@@ -54,7 +54,6 @@ tracker = SberEmissionTrack.Tracker(
     file_name="emission.csv"
     )
 
-
 tracker.start()
 <your gpu &(or) cpu calculations>
 tracker.stop()
