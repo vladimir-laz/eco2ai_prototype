@@ -87,8 +87,6 @@ def number_of_cpu():
     '''
     operating_system = platform.system()
     result = None
-    if operating_system == "Darwin":
-        operating_system = "MacOS"
 
     if operating_system == "Linux":
         try:
@@ -106,6 +104,60 @@ def number_of_cpu():
             result = min(int(dictionary["Socket(s)"]), int(dictionary["NUMA node(s)"]))
         except:
             warnings.warn(message="\nYou probably should have installed 'util-linux' to deretmine cpu number correctly\nFor now, number of cpu devices is set to 1\n\n", 
+                          category=NoNeededLibrary)
+            result = 1
+    elif operating_system == "Windows":
+        try:
+            # returns cpu sockets number
+            # running terminal command, getting output
+            string = os.popen("systeminfo")
+            output = string.read()
+            output
+            #print(output)
+            # dictionary creation
+            dictionary = dict()
+            for i in output.split('\n'):
+                tmp = i.split(':')
+                if len(tmp) == 2:
+                    dictionary[tmp[0]] = tmp[1]
+            #print(dictionary)
+            processor_string = 'something'
+            if 'Processor(s)' in dictionary:
+                processor_string = dictionary['Processor(s)']
+            if 'Џа®жҐбб®а(л)' in dictionary:
+                processor_string = dictionary['Џа®жҐбб®а(л)']
+            if 'Процессор(ы)' in dictionary:
+                processor_string = dictionary['Процессор(ы)']
+            #print(processor_string)
+            result = int(re.findall('- (\d)\.', processor_string)[0])
+            #print(result)
+        except:
+            warnings.warn(message="\nIt's impossible to deretmine cpu number correctly\nFor now, number of cpu devices is set to 1\n\n", 
+                          category=NoNeededLibrary)
+            result = 1
+    elif operating_system == "Darwin":
+        try:
+            string = os.popen("sysctl -a| sort | grep cpu")
+            output = string.read()
+            output
+            # print(output)
+            # dictionary creation
+            dictionary = dict()
+            for i in output.split('\n'):
+                tmp = i.split(':')
+                if len(tmp) == 2:
+                    dictionary[tmp[0]] = tmp[1]
+            #print(dictionary)
+            processor_string = 'something'
+            if 'hw.cpu64bit_capable' in dictionary:
+                processor_string = dictionary['hw.cpu64bit_capable']
+            else:
+                pass
+            # print(processor_string)
+            result = int(re.findall('(\d)', processor_string)[0])
+            # print(result)
+        except:
+            warnings.warn(message="\nIt's impossible to deretmine cpu number correctly\nFor now, number of cpu devices is set to 1\n\n", 
                           category=NoNeededLibrary)
             result = 1
     else: 
