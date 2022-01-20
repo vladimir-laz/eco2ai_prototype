@@ -6,12 +6,12 @@ from .emission_track import (
     track
 )
 
-from SberEmissionTrack.tools.tools_cpu import (
+from eco2ai.tools.tools_cpu import (
     CPU,
     all_available_cpu
 )
 
-from SberEmissionTrack.tools.tools_gpu import (
+from eco2ai.tools.tools_gpu import (
     GPU,
     all_available_gpu
 )
