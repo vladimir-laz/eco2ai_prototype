@@ -13,7 +13,7 @@ from pkg_resources import resource_stream
 CONSTANT_CONSUMPTION = 100.1
 FROM_WATTs_TO_kWATTh = 1000*3600
 NUM_CALCULATION = 200
-CPU_TABLE_NAME = resource_stream('SberEmissionTrack', 'data/cpu_names.csv').name
+CPU_TABLE_NAME = resource_stream('eco2ai', 'data/cpu_names.csv').name
 
 class NoCPUinTableWarning(Warning):
     pass
@@ -25,7 +25,7 @@ class CPU():
     '''
     This class is interface for tracking cpu consumption.
     All methods are done here on the assumption that all cpu devices are of equal model.
-    The CPU class is not intended for separate usage
+    The CPU class is not intended for separate usage, outside the Tracker class
     '''
     def __init__(self, measure_period=0.5):
         self._cpu_dict = get_cpu_info()
@@ -83,14 +83,13 @@ def all_available_cpu():
 def number_of_cpu():
     '''
     Returns number of cpu sockets(physical cpu processors)
-    If the body the function runs with error, it will return 1, which means there is only one cpu device
+    If the body of the function runs with error, number of available cpu devices will be set to 1
     '''
     operating_system = platform.system()
     result = None
 
     if operating_system == "Linux":
         try:
-            # returns cpu sockets number
             # running terminal command, getting output
             string = os.popen("lscpu")
             output = string.read()
@@ -108,19 +107,16 @@ def number_of_cpu():
             result = 1
     elif operating_system == "Windows":
         try:
-            # returns cpu sockets number
-            # running terminal command, getting output
+            # running cmd command, getting output
             string = os.popen("systeminfo")
             output = string.read()
             output
-            #print(output)
             # dictionary creation
             dictionary = dict()
             for i in output.split('\n'):
                 tmp = i.split(':')
                 if len(tmp) == 2:
                     dictionary[tmp[0]] = tmp[1]
-            #print(dictionary)
             processor_string = 'something'
             if 'Processor(s)' in dictionary:
                 processor_string = dictionary['Processor(s)']
@@ -128,34 +124,29 @@ def number_of_cpu():
                 processor_string = dictionary['Џа®жҐбб®а(л)']
             if 'Процессор(ы)' in dictionary:
                 processor_string = dictionary['Процессор(ы)']
-            #print(processor_string)
             result = int(re.findall('- (\d)\.', processor_string)[0])
-            #print(result)
         except:
             warnings.warn(message="\nIt's impossible to deretmine cpu number correctly\nFor now, number of cpu devices is set to 1\n\n", 
                           category=NoNeededLibrary)
             result = 1
     elif operating_system == "Darwin":
         try:
+            # running terminal command, getting output
             string = os.popen("sysctl -a| sort | grep cpu")
             output = string.read()
             output
-            # print(output)
             # dictionary creation
             dictionary = dict()
             for i in output.split('\n'):
                 tmp = i.split(':')
                 if len(tmp) == 2:
                     dictionary[tmp[0]] = tmp[1]
-            #print(dictionary)
             processor_string = 'something'
             if 'hw.cpu64bit_capable' in dictionary:
                 processor_string = dictionary['hw.cpu64bit_capable']
             else:
                 pass
-            # print(processor_string)
             result = int(re.findall('(\d)', processor_string)[0])
-            # print(result)
         except:
             warnings.warn(message="\nIt's impossible to deretmine cpu number correctly\nFor now, number of cpu devices is set to 1\n\n", 
                           category=NoNeededLibrary)
@@ -167,7 +158,10 @@ def number_of_cpu():
 
 def transform_cpu_name(f_string):
     '''
-    Drops all the waste tokens, patterns and words from a cpu name
+    Drops all the waste tokens, and words from a cpu name
+    Finds patterns. Patterns include processor's family and 
+    some certain specifications like 9400F in Intel Core i5-9400F
+    Returns modified cpu name with patterns
     '''
     # dropping all the waste tokens and patterns:
     f_string = re.sub('(\(R\))|(®)|(™)|(\(TM\))|(@.*)|(\S*GHz\S*)|(\[.*\])|( \d-Core)|(\(.*\))', '', f_string)
@@ -203,6 +197,11 @@ def find_max_tdp(elements):
     return max_value
 
 def get_patterns(cpu_name):
+    """
+    Finds patterns. Patterns include processor's family and 
+    some certain specifications like 9400F in Intel Core i5-9400F
+    Returns modified cpu name with patterns
+    """
     array = re.findall("(\S*\d+\S*)", cpu_name)
     for i in re.findall("(Ryzen Threadripper)|(Ryzen)|(EPYC)|(Athlon)|(Xeon Gold)|(Xeon Bronze)|(Xeon Silver)|(Xeon Platinum)|(Xeon)|(Core)|(Celeron)|(Atom)|(Pentium)",
                         cpu_name):
@@ -216,7 +215,7 @@ def get_patterns(cpu_name):
 def find_tdp_value(f_string, f_table_name, constant_value=CONSTANT_CONSUMPTION):
     '''
     Takes cpu names as input
-    Returns cpu with maximum TDP value
+    Returns cpu TDP
     '''
     # firstly, we try to find transformed cpu name in the cpu table:
     f_table = pd.read_csv(f_table_name)
