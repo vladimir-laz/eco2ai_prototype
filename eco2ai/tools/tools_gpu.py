@@ -99,6 +99,7 @@ class GPU():
             gpus_name = []
             for i in range(deviceCount):
                 handle = pynvml.nvmlDeviceGetHandleByIndex(i)
+                pynvml.nvmlDeviceGetPowerUsage(handle)
                 gpus_name.append(pynvml.nvmlDeviceGetName(handle))
             pynvml.nvmlShutdown()
             return gpus_name[0].decode("UTF-8")
@@ -109,20 +110,14 @@ class GPU():
         try:
             pynvml.nvmlInit()
             deviceCount = pynvml.nvmlDeviceGetCount()
+            for i in range(deviceCount):
+                handle = pynvml.nvmlDeviceGetHandleByIndex(i)
+                pynvml.nvmlDeviceGetPowerUsage(handle)
             pynvml.nvmlShutdown()
             return deviceCount
         except: 
             return 0
 
-# def is_gpu_available():
-#     '''
-#     Returns True if there are GPUs available.
-#     '''
-#     try:
-#         pynvml.nvmlInit()
-#         return True
-#     except pynvml.NVMLError:
-#         return False
 
 def is_gpu_available():
     '''
@@ -152,6 +147,7 @@ def all_available_gpu():
         gpus_name = []
         for i in range(deviceCount):
             handle = pynvml.nvmlDeviceGetHandleByIndex(i)
+            pynvml.nvmlDeviceGetPowerUsage(handle)
             # print("names:", pynvml.nvmlDeviceGetName(handle))
             gpus_name.append(pynvml.nvmlDeviceGetName(handle))
         string = f"""Seeable gpu device(s):
