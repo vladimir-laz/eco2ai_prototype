@@ -11,7 +11,7 @@ class GPU():
     '''
     This class is interface for tracking gpu consumption.
     All methods are done here on the assumption that all gpu devices are of equal model.
-    The GPU class is not intended for separate usage
+    The GPU class is not intended for separate usage, outside the Tracker class
     '''
     def __init__(self,):
         self._consumption = 0
@@ -116,7 +116,7 @@ class GPU():
 
 def is_gpu_available():
     '''
-    Returns True if the GPU details are available.
+    Returns True if there are GPUs available.
     '''
     try:
         pynvml.nvmlInit()

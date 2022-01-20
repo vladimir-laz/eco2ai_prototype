@@ -1,30 +1,30 @@
-# SberEmisisonTracker
+# eco2ai
  
 ## Requirements
 
 You should have installed git on your computer or server.
-If you are running your code in Linux, you will need to get util-linux installed to woork correctly(usually, it is installed by default)
+If you are running your code in Linux, you will need to get util-linux installed to work correctly(usually, it is installed by default)
 
 
 ##  Installation
-As this project is still under development, in order to utilize SberEmisisonTrack correctly please run 
+As this project is still under development, in order to utilize eco2ai correctly please run 
 ```bash
-pip uninstall SberEmissionTrack -y
+pip uninstall eco2ai -y
 ```
 before the installation
 
 Next step to install the package is to run the following command in your terminal:
 ```bash
-pip install --user git+git://github.com/vladimir-laz/SberEmissionTrack.git
+pip install --user git+git://github.com/vladimir-laz/eco2ai.git
 ```
 In order to all dependencies to be set correctly you may need to restart your kernel after package installation
 ## Use examples
-SberEmissionTrack's interface is quite simple. Here is a the most straightforward usage example:
+eco2ai's interface is quite simple. Here is a the most straightforward usage example:
 ```python
 
-import SberEmissionTrack
+import eco2ai
 
-tracker = SberEmissionTrack.Tracker(project_name="YourProjectName", experiment_description="training the <your model> model")
+tracker = eco2ai.Tracker(project_name="YourProjectName", experiment_description="training the <your model> model")
 
 tracker.start()
 
@@ -33,9 +33,9 @@ tracker.start()
 tracker.stop()
 ```
 
-SberEmissionTrack also supports decorators. Once decorated function executed, emissions info will be written to the file. See example below:
+eco2ai also supports decorators. Once decorated function executed, emissions info will be written to the file. See example below:
 ```python
-from SberEmissionTrack import track
+from eco2ai import track
 
 @track
 def train_func(model, dataset, optimizer, epochs):
@@ -49,9 +49,9 @@ For your convenience every time you initilize a Tracker object with your custom 
 
 ```python
 
-import SberEmissionTrack
+import eco2ai
 
-tracker = SberEmissionTrack.Tracker(
+tracker = eco2ai.Tracker(
     project_name="YourProjectName", 
     experiment_description="training <your model> model",
     file_name="emission.csv"
@@ -64,9 +64,9 @@ tracker.stop()
 ...
 
 # now, we want to create a new tracker for new calculations
-tracker = SberEmissionTrack.Tracker()
-# it's equivelent to:
-# tracker = SberEmissionTrack.Tracker(
+tracker = eco2ai.Tracker()
+# now, it's equivelent to:
+# tracker = eco2ai.Tracker(
 #     project_name="YourProjectName", 
 #     experiment_description="training the <your model> model",
 #     file_name="emission.csv"
@@ -80,7 +80,7 @@ tracker.stop()
 You can also set parameters using set_params() function, like in the example below:
 
 ```python
-from SberEmissionTrack import set_params, Tracker
+from eco2ai import set_params, Tracker
 
 set_params(
     project_name="My_default_project_name",
