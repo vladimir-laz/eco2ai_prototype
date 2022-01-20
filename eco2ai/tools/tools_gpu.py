@@ -2,7 +2,9 @@ import pynvml
 import time
 import warnings
 
+
 FROM_mWATTS_TO_kWATTH = 1000*1000*3600
+
 
 class NoGPUWarning(Warning):
     pass
