@@ -10,16 +10,45 @@ from pkg_resources import resource_stream
 import sys
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from SberEmissionTrack.tools.tools_gpu import *
-from SberEmissionTrack.tools.tools_cpu import *
+from eco2ai.tools.tools_gpu import *
+from eco2ai.tools.tools_cpu import *
 
 EMISSION_PER_MWT = 511.7942
 FROM_mWATTS_TO_kWATTH = 1000*1000*3600
 FROM_kWATTH_TO_MWATTH = 1000
 
 
+def set_params(**params):
+    """
+    Sets default Tracker attributes values:
+    project_name = ...
+    experiment_description = ...
+    file_name = ...
+    """
+    dictionary = dict()
+    filename = resource_stream('eco2ai', 'data/config.txt').name
+    for param in params:
+        dictionary[param] = params[param]
+    # print(dictionary)
+    if "project_name" not in dictionary:
+        dictionary["project_name"] = "default project name"
+    if "experiment_description" not in dictionary:
+        dictionary["experiment_description"] = "default experiment description"
+    if "file_name" not in dictionary:
+        dictionary["file_name"] = "emission.csv"
+    with open(filename, 'w') as json_file:
+        json_file.write(json.dumps(dictionary))
+    return dictionary
+
+
 def get_params():
-    filename = resource_stream('SberEmissionTrack', 'data/config.txt').name
+    """
+    Returns default Tracker attributes values:
+    project_name = ...
+    experiment_description = ...
+    file_name = ...
+    """
+    filename = resource_stream('eco2ai', 'data/config.txt').name
     if not os.path.isfile(filename):
         with open(filename, "w"):
             pass
@@ -44,8 +73,8 @@ class Tracker:
     ----------------------------------------------------------------------
     Use example:
 
-    import SberEmissionTrack.Tracker
-    tracker = SberEmissionTrack.Tracker()
+    import eco2ai.Tracker
+    tracker = eco2ai.Tracker()
 
     tracker.start()
 
@@ -211,35 +240,24 @@ class Tracker:
 
 def available_devices():
     '''
-    Prints all available and seeable cpu & gpu devices and their number
+    Prints number of all available and seeable cpu & gpu devices
     '''
     all_available_cpu()
     all_available_gpu()
     # need to add RAM
 
-def set_params(**params):
-    dictionary = dict()
-    filename = resource_stream('SberEmissionTrack', 'data/config.txt').name
-    for param in params:
-        dictionary[param] = params[param]
-    # print(dictionary)
-    if "project_name" not in dictionary:
-        dictionary["project_name"] = "default project name"
-    if "experiment_description" not in dictionary:
-        dictionary["experiment_description"] = "default experiment description"
-    if "file_name" not in dictionary:
-        dictionary["file_name"] = "emission.csv"
-    with open(filename, 'w') as json_file:
-        json_file.write(json.dumps(dictionary))
-    return dictionary
-
 def track(func):
-  def inner(*args):
-    tracker = Tracker()
-    tracker.start()
-    # print(args)
-    returned = func(*args)
-    tracker.stop()
-    del tracker
-    return returned
-  return inner
+    """
+    decorator, that modifies function by creating Tracker object and 
+    running Tracker.start() in the function beginning and 
+    running Tracker.stop() in the end of function
+    """
+    def inner(*args):
+        tracker = Tracker()
+        tracker.start()
+        # print(args)
+        returned = func(*args)
+        tracker.stop()
+        del tracker
+        return returned
+    return inner
