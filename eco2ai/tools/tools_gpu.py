@@ -114,12 +114,29 @@ class GPU():
         except: 
             return 0
 
+# def is_gpu_available():
+#     '''
+#     Returns True if there are GPUs available.
+#     '''
+#     try:
+#         pynvml.nvmlInit()
+#         return True
+#     except pynvml.NVMLError:
+#         return False
+
 def is_gpu_available():
     '''
     Returns True if there are GPUs available.
     '''
     try:
         pynvml.nvmlInit()
+        deviceCount = pynvml.nvmlDeviceGetCount()
+        gpus_powers = []
+        for i in range(deviceCount):
+            handle = pynvml.nvmlDeviceGetHandleByIndex(i)
+            # print("power:", pynvml.nvmlDeviceGetPowerUsage(handle))
+            gpus_powers.append(pynvml.nvmlDeviceGetPowerUsage(handle))
+        pynvml.nvmlShutdown()
         return True
     except pynvml.NVMLError:
         return False
