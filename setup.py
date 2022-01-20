@@ -11,15 +11,15 @@ DEPENDENCIES = [
 ]
 
 setup(
-    name = 'SberEmissionTrack',
+    name = 'eco2ai',
     version = '1.0.0',
     author="Vladimir Lazarev",
-    url = 'https://github.com/vladimir-laz/SberEmissionTrack.git',
+    url = 'https://github.com/vladimir-laz/eco2ai.git',
     description = long_description,
     packages = find_packages(),
     install_requires=DEPENDENCIES,
     package_data={
-        "SberEmissionTrack": [
+        "eco2ai": [
             "data/cpu_names.csv",
             "data/config.txt"
         ]
